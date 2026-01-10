@@ -1,0 +1,31 @@
+/* Dashboard Layout Styles */
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+  background: #f5f6fa;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-left: 250px;
+}
+
+.page-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+  }
+
+  .page-content {
+    padding: 80px 16px 24px 16px;
+  }
+}
