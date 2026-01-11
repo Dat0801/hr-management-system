@@ -38,12 +38,11 @@ export default function EmployeeList() {
   const filteredEmployees = useMemo(() => {
     let filtered = Array.isArray(employeesData) ? employeesData : [];
 
-    // Search by name or code
+    // Search by name
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter((emp) =>
-        emp.user?.name?.toLowerCase().includes(query) ||
-        emp.code?.toLowerCase().includes(query)
+        emp.user?.name?.toLowerCase().includes(query)
       );
     }
 
@@ -221,9 +220,6 @@ export default function EmployeeList() {
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50">
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      Code
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       Name
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -236,7 +232,7 @@ export default function EmployeeList() {
                       Status
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      Join Date
+                      Hire Date
                     </th>
                     <th className="px-6 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       Actions
@@ -249,9 +245,6 @@ export default function EmployeeList() {
                       key={employee.id}
                       className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
                     >
-                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                        {employee.code}
-                      </td>
                       <td className="px-6 py-4 text-sm text-gray-700">
                         {employee.user?.name || '-'}
                       </td>
@@ -271,7 +264,7 @@ export default function EmployeeList() {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-700">
-                        {formatDate(employee.join_date)}
+                        {formatDate(employee.hire_date)}
                       </td>
                       <td className="px-6 py-4 text-sm">
                         <div className="flex items-center justify-center gap-2">

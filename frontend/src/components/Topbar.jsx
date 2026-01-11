@@ -1,13 +1,20 @@
 import React from 'react';
-import { Bell, User, Settings } from 'lucide-react';
+import { Bell, User, Settings, Menu } from 'lucide-react';
 import '../styles/topbar.css';
 
-const Topbar = ({ userName = 'Admin User' }) => {
+const Topbar = ({ userName = 'Admin User', onToggleSidebar }) => {
   return (
     <header className="topbar">
       <div className="topbar-container">
         {/* Left side - Title */}
         <div className="topbar-left">
+          <button 
+            className="p-2 mr-4 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
+            onClick={onToggleSidebar}
+            aria-label="Toggle Sidebar"
+          >
+            <Menu size={24} />
+          </button>
           <h2 className="topbar-title">HR Management System</h2>
         </div>
 

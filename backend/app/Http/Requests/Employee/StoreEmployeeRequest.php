@@ -14,7 +14,10 @@ class StoreEmployeeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'exists:users,id', 'unique:employees,user_id'],
+            'user_id' => ['nullable', 'exists:users,id', 'unique:employees,user_id'],
+            'name' => ['required_without:user_id', 'string', 'max:255'],
+            'email' => ['required_without:user_id', 'email'],
+            'password' => ['nullable', 'string', 'min:6'],
             'department_id' => ['required', 'exists:departments,id'],
             'position' => ['required', 'string', 'max:255'],
             'salary' => ['required', 'numeric', 'min:0'],
@@ -26,5 +29,26 @@ class StoreEmployeeRequest extends FormRequest
             'postal_code' => ['nullable', 'string', 'max:20'],
             'status' => ['required', 'in:active,inactive,on_leave,terminated'],
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $email = $this->input('email');
+            $userId = $this->input('user_id');
+
+            if (!$userId && $email) {
+                $user = \App\Models\User::where('email', $email)->first();
+                if ($user) {
+                    // Check if user has an active employee record
+                    // Note: Employee model uses SoftDeletes, so where() excludes deleted records by default.
+                    $employee = \App\Models\Employee::where('user_id', $user->id)->first();
+                    
+                    if ($employee) {
+                        $validator->errors()->add('email', 'This email is already associated with an active employee.');
+                    }
+                }
+            }
+        });
     }
 }

@@ -1,64 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Users, UserCheck, Clock, FileText, TrendingUp, TrendingDown, ArrowUpRight, Activity } from 'lucide-react';
+import api from '../lib/api';
 
 const Dashboard = () => {
-  // Dummy data
-  const dashboardStats = [
-    {
-      id: 1,
-      title: 'Total Employees',
-      value: 245,
-      icon: Users,
-      bgColor: 'bg-blue-50',
-      iconColor: 'text-blue-600',
-      trend: null,
-    },
-    {
-      id: 2,
-      title: 'Active Employees',
-      value: 238,
-      icon: UserCheck,
-      bgColor: 'bg-green-50',
-      iconColor: 'text-green-600',
-      trend: { value: 2.3, type: 'up' },
-    },
-    {
-      id: 3,
-      title: 'Today Attendance',
-      value: 215,
-      icon: Clock,
-      bgColor: 'bg-orange-50',
-      iconColor: 'text-orange-600',
-      trend: { value: 87.7, type: 'percentage' },
-    },
-    {
-      id: 4,
-      title: 'Pending Leave Requests',
-      value: 12,
-      icon: FileText,
-      bgColor: 'bg-pink-50',
-      iconColor: 'text-pink-600',
-      trend: { value: 3, type: 'down' },
-    },
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState([]);
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const response = await api.get('/dashboard/stats');
+        setStats(response.data.stats);
+        setRecentActivity(response.data.recentActivity);
+        setDepartments(response.data.departments);
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  const iconMapping = {
+    'Total Employees': { icon: Users, bgColor: 'bg-blue-50', iconColor: 'text-blue-600' },
+    'Active Employees': { icon: UserCheck, bgColor: 'bg-green-50', iconColor: 'text-green-600' },
+    'Today Attendance': { icon: Clock, bgColor: 'bg-orange-50', iconColor: 'text-orange-600' },
+    'Pending Leave Requests': { icon: FileText, bgColor: 'bg-pink-50', iconColor: 'text-pink-600' },
+  };
+
+  const departmentColors = [
+    'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500', 'bg-pink-500', 'bg-indigo-500'
   ];
 
-  // Recent activity dummy data
-  const recentActivity = [
-    { id: 1, name: 'John Doe', action: 'Checked In', time: '09:00 AM', status: 'success' },
-    { id: 2, name: 'Jane Smith', action: 'Checked In', time: '09:15 AM', status: 'success' },
-    { id: 3, name: 'Mike Johnson', action: 'Applied for Leave', time: '10:30 AM', status: 'pending' },
-    { id: 4, name: 'Sarah Williams', action: 'Checked Out', time: '05:45 PM', status: 'success' },
-    { id: 5, name: 'Robert Brown', action: 'Applied for Leave', time: '11:20 AM', status: 'pending' },
-  ];
-
-  const departments = [
-    { name: 'Engineering', count: 45, color: 'bg-blue-500' },
-    { name: 'Sales', count: 32, color: 'bg-green-500' },
-    { name: 'HR', count: 12, color: 'bg-purple-500' },
-    { name: 'Operations', count: 28, color: 'bg-orange-500' },
-    { name: 'Marketing', count: 21, color: 'bg-pink-500' },
-    { name: 'Finance', count: 15, color: 'bg-indigo-500' },
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -71,15 +55,17 @@ const Dashboard = () => {
 
         {/* Summary Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-          {dashboardStats.map((stat) => {
-            const Icon = stat.icon;
+          {stats.map((stat) => {
+            const config = iconMapping[stat.title] || iconMapping['Total Employees'];
+            const Icon = config.icon;
+            
             return (
               <div
                 key={stat.id}
                 className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`${stat.bgColor} ${stat.iconColor} w-12 h-12 rounded-lg flex items-center justify-center`}>
+                  <div className={`${config.bgColor} ${config.iconColor} w-12 h-12 rounded-lg flex items-center justify-center`}>
                     <Icon size={24} strokeWidth={2} />
                   </div>
                   {stat.trend && (
@@ -134,44 +120,50 @@ const Dashboard = () => {
 
             {/* Activity List */}
             <div className="space-y-1">
-              {recentActivity.map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-center justify-between py-4 px-4 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white font-semibold">
-                      {activity.name.split(' ').map(n => n[0]).join('')}
+              {recentActivity.length > 0 ? (
+                recentActivity.map((activity) => (
+                  <div
+                    key={activity.id}
+                    className="flex items-center justify-between py-4 px-4 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white font-semibold">
+                        {activity.name.split(' ').map(n => n[0]).join('')}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900">{activity.name}</p>
+                        <p className="text-sm text-gray-600">{activity.action}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">{activity.name}</p>
-                      <p className="text-sm text-gray-600">{activity.action}</p>
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`inline-flex items-center justify-center w-8 h-8 rounded-full ${
+                          activity.status === 'success' || activity.status === 'approved'
+                            ? 'bg-green-100 text-green-600'
+                            : activity.status === 'pending'
+                            ? 'bg-orange-100 text-orange-600'
+                            : 'bg-red-100 text-red-600'
+                        }`}
+                      >
+                        {activity.status === 'success' || activity.status === 'approved' ? (
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        ) : (
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        )}
+                      </span>
+                      <p className="text-sm text-gray-500 font-medium min-w-[80px] text-right">
+                        {activity.time}
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`inline-flex items-center justify-center w-8 h-8 rounded-full ${
-                        activity.status === 'success'
-                          ? 'bg-green-100 text-green-600'
-                          : 'bg-orange-100 text-orange-600'
-                      }`}
-                    >
-                      {activity.status === 'success' ? (
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                      ) : (
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                          <circle cx="12" cy="12" r="3" />
-                        </svg>
-                      )}
-                    </span>
-                    <p className="text-sm text-gray-500 font-medium min-w-[80px] text-right">
-                      {activity.time}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-500">No recent activity</div>
+              )}
             </div>
           </div>
 
@@ -186,20 +178,24 @@ const Dashboard = () => {
 
             {/* Department List */}
             <div className="space-y-3">
-              {departments.map((dept, index) => (
-                <div key={index} className="group">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">{dept.name}</span>
-                    <span className="text-lg font-bold text-gray-900">{dept.count}</span>
+              {departments.length > 0 ? (
+                departments.map((dept, index) => (
+                  <div key={index} className="group">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">{dept.name}</span>
+                      <span className="text-lg font-bold text-gray-900">{dept.count}</span>
+                    </div>
+                    <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className={`absolute top-0 left-0 h-full ${departmentColors[index % departmentColors.length]} rounded-full transition-all duration-500 group-hover:opacity-80`}
+                        style={{ width: `${(dept.count / (stats.find(s => s.title === 'Total Employees')?.value || 1)) * 100}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className={`absolute top-0 left-0 h-full ${dept.color} rounded-full transition-all duration-500 group-hover:opacity-80`}
-                      style={{ width: `${(dept.count / 245) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-500">No departments found</div>
+              )}
             </div>
 
             {/* Department Summary */}

@@ -24,7 +24,7 @@ class EmployeeController extends Controller
     public function store(StoreEmployeeRequest $request)
     {
         $employee = $this->service->create($request->validated());
-        return new EmployeeResource($employee);
+        return new EmployeeResource($employee->load(['user', 'department']));
     }
 
     public function show(Employee $employee)
@@ -35,7 +35,7 @@ class EmployeeController extends Controller
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
         $updated = $this->service->update($employee->id, $request->validated());
-        return new EmployeeResource($updated);
+        return new EmployeeResource($updated->load(['user', 'department']));
     }
 
     public function destroy(Employee $employee)

@@ -4,12 +4,12 @@ import api from '../../lib/api';
 
 export default function EmployeeForm({ isOpen, employee, departments, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
-    code: '',
     user: { name: '', email: '' },
     department_id: '',
     position: '',
+    salary: '',
     status: 'active',
-    join_date: '',
+    hire_date: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -19,26 +19,26 @@ export default function EmployeeForm({ isOpen, employee, departments, onClose, o
   useEffect(() => {
     if (employee) {
       setFormData({
-        code: employee.code || '',
         user: {
           name: employee.user?.name || '',
           email: employee.user?.email || '',
         },
-        department_id: employee.department_id || '',
+        department_id: employee.department_id || employee.department?.id || '',
         position: employee.position || '',
+        salary: employee.salary || '',
         status: employee.status || 'active',
-        join_date: employee.join_date ? employee.join_date.split('T')[0] : '',
+        hire_date: employee.hire_date ? employee.hire_date.split('T')[0] : '',
       });
       setError('');
       setFieldErrors({});
     } else {
       setFormData({
-        code: '',
         user: { name: '', email: '' },
         department_id: '',
         position: '',
+        salary: '',
         status: 'active',
-        join_date: '',
+        hire_date: '',
       });
       setError('');
       setFieldErrors({});
@@ -78,13 +78,13 @@ export default function EmployeeForm({ isOpen, employee, departments, onClose, o
 
     try {
       const submitData = {
-        code: formData.code,
         name: formData.user.name,
         email: formData.user.email,
         department_id: formData.department_id,
         position: formData.position,
+        salary: formData.salary,
         status: formData.status,
-        join_date: formData.join_date,
+        hire_date: formData.hire_date,
       };
 
       if (employee?.id) {
@@ -133,25 +133,6 @@ export default function EmployeeForm({ isOpen, employee, departments, onClose, o
               {error}
             </div>
           )}
-
-          {/* Employee Code */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Employee Code *
-            </label>
-            <input
-              type="text"
-              name="code"
-              value={formData.code}
-              onChange={handleChange}
-              disabled={!!employee}
-              placeholder="e.g., EMP001"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-            />
-            {fieldErrors.code && (
-              <p className="mt-1 text-sm text-red-600">{fieldErrors.code[0]}</p>
-            )}
-          </div>
 
           {/* Full Name */}
           <div className="mb-4">
@@ -230,20 +211,38 @@ export default function EmployeeForm({ isOpen, employee, departments, onClose, o
             )}
           </div>
 
-          {/* Join Date */}
+          {/* Salary */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Join Date *
+              Salary *
+            </label>
+            <input
+              type="number"
+              name="salary"
+              value={formData.salary}
+              onChange={handleChange}
+              placeholder="50000"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            {fieldErrors.salary && (
+              <p className="mt-1 text-sm text-red-600">{fieldErrors.salary[0]}</p>
+            )}
+          </div>
+
+          {/* Hire Date */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Hire Date *
             </label>
             <input
               type="date"
-              name="join_date"
-              value={formData.join_date}
+              name="hire_date"
+              value={formData.hire_date}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {fieldErrors.join_date && (
-              <p className="mt-1 text-sm text-red-600">{fieldErrors.join_date[0]}</p>
+            {fieldErrors.hire_date && (
+              <p className="mt-1 text-sm text-red-600">{fieldErrors.hire_date[0]}</p>
             )}
           </div>
 

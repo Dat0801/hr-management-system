@@ -13,7 +13,12 @@ class UpdateEmployeeRequest extends FormRequest
 
     public function rules(): array
     {
+        $employee = $this->route('employee');
+        $userId = $employee->user_id;
+
         return [
+            'name' => ['sometimes', 'string', 'max:255'],
+            'email' => ['sometimes', 'email', 'unique:users,email,' . $userId],
             'department_id' => ['sometimes', 'exists:departments,id'],
             'position' => ['sometimes', 'string', 'max:255'],
             'salary' => ['sometimes', 'numeric', 'min:0'],

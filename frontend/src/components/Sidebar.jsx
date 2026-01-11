@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Home,
@@ -12,8 +12,7 @@ import {
 } from 'lucide-react';
 import '../styles/sidebar.css';
 
-const Sidebar = ({ onLogout }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const Sidebar = ({ onLogout, isCollapsed, isMobileOpen, onMobileClose }) => {
   const location = useLocation();
 
   const menuItems = [
@@ -28,27 +27,22 @@ const Sidebar = ({ onLogout }) => {
 
   return (
     <>
-      {/* Mobile toggle button */}
-      <button
-        className="sidebar-mobile-toggle"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
+      {/* Mobile toggle button (handled by Topbar now, but keeping this hidden or synced if needed) */}
+      {/* We are removing the sidebar-mobile-toggle button from here since Topbar handles it */}
+      
       {/* Overlay for mobile */}
-      {isOpen && (
+      {isMobileOpen && (
         <div
           className="sidebar-overlay"
-          onClick={() => setIsOpen(false)}
+          onClick={onMobileClose}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <aside className={`sidebar ${isMobileOpen ? 'open' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
         {/* Logo */}
         <div className="sidebar-header">
-          <h1 className="sidebar-logo">HR System</h1>
+          <h1 className="sidebar-logo">{isCollapsed ? 'HR' : 'HR System'}</h1>
         </div>
 
         {/* Navigation Menu */}
@@ -61,10 +55,11 @@ const Sidebar = ({ onLogout }) => {
                   <Link
                     to={item.path}
                     className={`menu-item ${isActive(item.path) ? 'active' : ''}`}
-                    onClick={() => setIsOpen(false)}
+                    onClick={onMobileClose}
+                    title={isCollapsed ? item.label : ''}
                   >
                     <Icon size={20} className="menu-icon" />
-                    <span className="menu-label">{item.label}</span>
+                    {!isCollapsed && <span className="menu-label">{item.label}</span>}
                   </Link>
                 </li>
               );
@@ -77,12 +72,13 @@ const Sidebar = ({ onLogout }) => {
           <button
             className="logout-btn"
             onClick={() => {
-              setIsOpen(false);
+              onMobileClose();
               onLogout();
             }}
+            title={isCollapsed ? 'Logout' : ''}
           >
             <LogOut size={20} />
-            <span>Logout</span>
+            {!isCollapsed && <span>Logout</span>}
           </button>
         </div>
       </aside>
