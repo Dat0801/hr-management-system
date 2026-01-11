@@ -18,7 +18,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
         $permissions = [
             'create department', 'update department', 'delete department', 'view department',
             'create employee', 'update employee', 'delete employee', 'view employee',
@@ -27,20 +29,23 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($permissions as $perm) {
-            Permission::findOrCreate($perm);
+            Permission::firstOrCreate(['name' => $perm, 'guard_name' => 'web']);
         }
 
-        $adminRole = Role::findOrCreate('admin');
-        $hrRole = Role::findOrCreate('hr_manager');
-        $employeeRole = Role::findOrCreate('employee');
+        $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+        $hrRole = Role::firstOrCreate(['name' => 'hr_manager', 'guard_name' => 'web']);
+        $employeeRole = Role::firstOrCreate(['name' => 'employee', 'guard_name' => 'web']);
 
-        $adminRole->givePermissionTo($permissions);
-        $hrRole->givePermissionTo([
+        $adminRole->givePermissionTo(Permission::all());
+        
+        $hrPermissions = [
             'create department', 'update department', 'view department',
             'create employee', 'update employee', 'view employee',
             'create attendance', 'update attendance', 'view attendance',
             'create leave', 'update leave', 'view leave',
-        ]);
+        ];
+        
+        $hrRole->givePermissionTo($hrPermissions);
 
         $user = User::firstOrCreate(
             ['email' => 'admin@example.com'],
@@ -50,7 +55,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        if (! $user->hasRole($adminRole)) {
+        if (! $user->hasRole('admin')) {
             $user->assignRole($adminRole);
         }
 
