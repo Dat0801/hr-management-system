@@ -139,7 +139,7 @@ export default function EmployeeList() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>

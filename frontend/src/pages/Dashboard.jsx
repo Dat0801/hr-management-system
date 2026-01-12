@@ -29,7 +29,7 @@ const Dashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-center py-16">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
@@ -37,8 +37,8 @@ const Dashboard = () => {
 
   if (isError) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white border border-red-200 text-red-700 px-6 py-4 rounded-xl shadow-sm max-w-md w-full mx-4">
+      <div className="flex items-center justify-center py-16">
+        <div className="bg-white border border-red-200 text-red-700 px-6 py-4 rounded-lg shadow-sm max-w-md w-full mx-4">
           <p className="font-semibold mb-1">Failed to load dashboard</p>
           <p className="text-sm text-red-600">Please check your connection or try again later.</p>
         </div>
@@ -47,16 +47,16 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-[1600px] mx-auto px-6 lg:px-8 py-8">
+    <div>
+      <div className="max-w-7xl mx-auto">
         {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Dashboard</h1>
-          <p className="text-gray-600 text-lg">Welcome back! Here's your HR management overview.</p>
+        <div className="mb-8 px-6 lg:px-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
+          <p className="text-gray-600">Welcome back! Here's your HR management overview.</p>
         </div>
 
         {/* Summary Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8 px-6 lg:px-8">
           {stats.map((stat) => {
             const config = iconMapping[stat.title] || iconMapping['Total Employees'];
             const Icon = config.icon;
@@ -64,7 +64,7 @@ const Dashboard = () => {
             return (
               <div
                 key={stat.id}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200"
+                className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className={`${config.bgColor} ${config.iconColor} w-12 h-12 rounded-lg flex items-center justify-center`}>
@@ -104,9 +104,9 @@ const Dashboard = () => {
         </div>
 
         {/* Content Grid - 2 Columns on Desktop */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 px-6 lg:px-8">
           {/* Recent Activity - Takes 2 columns */}
-          <div className="xl:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="xl:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center">
@@ -170,7 +170,7 @@ const Dashboard = () => {
           </div>
 
           {/* Department Overview - Takes 1 column */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
                 <Users size={20} className="text-purple-600" />
