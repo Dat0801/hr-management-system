@@ -3,10 +3,12 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Eye, Edit, Trash2, Search, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import api from '../../lib/api';
 import EmployeeForm from './EmployeeForm';
+import { useAuth } from '../../store/auth';
 
 const ITEMS_PER_PAGE = 10;
 
 export default function EmployeeList() {
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -92,6 +94,11 @@ export default function EmployeeList() {
   const confirmDelete = async () => {
     if (!deleteConfirm) return;
 
+    if (user?.role !== 'admin') {
+      setDeleteConfirm(null);
+      return;
+    }
+
     try {
       await api.delete(`/employees/${deleteConfirm.id}`);
       queryClient.invalidateQueries({ queryKey: ['employees'] });
@@ -139,13 +146,15 @@ export default function EmployeeList() {
           <h1 className="text-3xl font-bold text-gray-900">Employees</h1>
           <p className="text-gray-600 mt-1">Manage your organization's workforce</p>
         </div>
-        <button
-          onClick={handleCreateClick}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <Plus size={20} />
-          Create Employee
-        </button>
+        {(user?.role === 'admin' || user?.role === 'hr') && (
+          <button
+            onClick={handleCreateClick}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Plus size={20} />
+            Create Employee
+          </button>
+        )}
       </div>
 
       {/* Filters */}
@@ -275,20 +284,24 @@ export default function EmployeeList() {
                           >
                             <Eye size={16} />
                           </button>
-                          <button
-                            onClick={() => handleEditClick(employee)}
-                            className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                            title="Edit"
-                          >
-                            <Edit size={16} />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteClick(employee)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                            title="Delete"
-                          >
-                            <Trash2 size={16} />
-                          </button>
+                          {(user?.role === 'admin' || user?.role === 'hr') && (
+                            <button
+                              onClick={() => handleEditClick(employee)}
+                              className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                              title="Edit"
+                            >
+                              <Edit size={16} />
+                            </button>
+                          )}
+                          {user?.role === 'admin' && (
+                            <button
+                              onClick={() => handleDeleteClick(employee)}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -357,7 +370,7 @@ export default function EmployeeList() {
 
       {/* Delete Confirmation Dialog */}
       {deleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 m-0 bg-black bg-opacity-50 flex items-center justify-center z-[300] p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-sm w-full">
             <div className="p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Employee</h3>

@@ -1,29 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Users, UserCheck, Clock, FileText, TrendingUp, TrendingDown, ArrowUpRight, Activity } from 'lucide-react';
 import api from '../lib/api';
 
 const Dashboard = () => {
-  const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState([]);
-  const [recentActivity, setRecentActivity] = useState([]);
-  const [departments, setDepartments] = useState([]);
+  const { data: dashboardData, isLoading, isError } = useQuery({
+    queryKey: ['dashboard', 'stats'],
+    queryFn: async () => {
+      const response = await api.get('/dashboard/stats');
+      return response.data;
+    },
+  });
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const response = await api.get('/dashboard/stats');
-        setStats(response.data.stats);
-        setRecentActivity(response.data.recentActivity);
-        setDepartments(response.data.departments);
-      } catch (error) {
-        console.error('Failed to fetch dashboard data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardData();
-  }, []);
+  const stats = Array.isArray(dashboardData?.stats) ? dashboardData.stats : [];
+  const recentActivity = Array.isArray(dashboardData?.recentActivity) ? dashboardData.recentActivity : [];
+  const departments = Array.isArray(dashboardData?.departments) ? dashboardData.departments : [];
 
   const iconMapping = {
     'Total Employees': { icon: Users, bgColor: 'bg-blue-50', iconColor: 'text-blue-600' },
@@ -36,10 +27,21 @@ const Dashboard = () => {
     'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500', 'bg-pink-500', 'bg-indigo-500'
   ];
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-white border border-red-200 text-red-700 px-6 py-4 rounded-xl shadow-sm max-w-md w-full mx-4">
+          <p className="font-semibold mb-1">Failed to load dashboard</p>
+          <p className="text-sm text-red-600">Please check your connection or try again later.</p>
+        </div>
       </div>
     );
   }
