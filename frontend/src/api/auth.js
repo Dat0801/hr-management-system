@@ -76,7 +76,7 @@ export const getCurrentUser = async () => {
  */
 export const logoutUser = async () => {
   try {
-    const response = await api.post('/logout');
+    await api.post('/logout');
     return {
       success: true,
       message: 'Logout successful'

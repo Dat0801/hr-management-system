@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useEffect } from 'react';
 import { useAuth } from '../store/auth';
 
 /**
@@ -15,7 +15,7 @@ export function AuthProvider({ children }) {
     if (auth.token && !auth.user) {
       auth.fetchMe();
     }
-  }, [auth.token]);
+  }, [auth]);
 
   return (
     <AuthContext.Provider value={auth}>
@@ -28,10 +28,4 @@ export function AuthProvider({ children }) {
  * Hook to use auth context
  * Returns current auth state and methods
  */
-export function useAuthContext() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuthContext must be used within AuthProvider');
-  }
-  return context;
-}
+export default AuthContext;

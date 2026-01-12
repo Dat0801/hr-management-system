@@ -36,10 +36,16 @@ export const useAuth = create((set) => ({
     try {
       const res = await api.get('/me');
       set({ user: res.data });
-    } catch {}
+    } catch (e) {
+      set({ error: e.response?.data?.message || 'Failed to fetch current user' });
+    }
   },
   logout: async () => {
-    try { await api.post('/logout'); } catch {}
+    try {
+      await api.post('/logout');
+    } catch (e) {
+      set({ error: e.response?.data?.message || 'Logout failed' });
+    }
     localStorage.removeItem('token');
     set({ user: null, token: null });
   }
