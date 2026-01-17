@@ -38,7 +38,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $data = $request->validated();
-        $user = User::where('email', $data['email'])->first();
+        $user = User::where('email', $data['email'])->with('employee.department')->first();
 
         if (! $user || ! Hash::check($data['password'], $user->password)) {
             throw ValidationException::withMessages([
@@ -50,6 +50,7 @@ class AuthController extends Controller
 
         return response()->json([
             'user' => new UserResource($user),
+            'employee' => $user->employee ? new \App\Http\Resources\EmployeeResource($user->employee) : null,
             'token' => $token,
         ]);
     }
