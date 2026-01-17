@@ -10,4 +10,9 @@ class DepartmentRepository extends BaseRepository
     {
         return Department::class;
     }
+
+    public function paginateWithEmployeesCount(int $perPage = 15)
+    {
+        return $this->model->withCount('employees')->paginate($perPage);
+    }
 }

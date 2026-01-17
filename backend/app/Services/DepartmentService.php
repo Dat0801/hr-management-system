@@ -12,7 +12,7 @@ class DepartmentService
 
     public function list(int $perPage = 15)
     {
-        return $this->departments->paginate($perPage);
+        return $this->departments->paginateWithEmployeesCount($perPage);
     }
 
     public function create(array $data)

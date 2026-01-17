@@ -11,6 +11,10 @@ export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.title = 'Login | HR Management';
+  }, []);
+
+  useEffect(() => {
     if (token) navigate('/');
   }, [token, navigate]);
 
