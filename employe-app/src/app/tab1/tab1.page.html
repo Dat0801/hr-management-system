@@ -1,17 +1,158 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+    <ion-title>Home</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="home-content">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+      <ion-title size="large">Home</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <div class="home-wrapper">
+    <div class="home-header">
+      <div class="home-user">
+        <div class="home-avatar">
+          {{ initials }}
+        </div>
+        <div>
+          <div class="home-kicker">Dashboard</div>
+          <h1 class="home-greeting">
+            Hello, {{ user?.name || 'Employee' }}
+          </h1>
+          <p class="home-subtitle">
+            Quick overview of your profile and work status.
+          </p>
+        </div>
+      </div>
+
+      <div class="home-tags">
+        <span class="tag" *ngIf="employee?.position as position">
+          {{ position }}
+        </span>
+        <span class="tag" *ngIf="employee?.department?.name as departmentName">
+          {{ departmentName }}
+        </span>
+      </div>
+    </div>
+
+    <ion-grid class="home-grid">
+      <ion-row>
+        <ion-col size="12" sizeLg="8">
+          <ion-card class="summary-card">
+            <ion-card-content>
+              <div class="summary-row">
+                <div class="summary-item">
+                  <ion-icon name="time-outline" class="summary-icon"></ion-icon>
+                  <div>
+                    <div class="summary-label">Today</div>
+                    <div class="summary-value">No attendance recorded</div>
+                  </div>
+                </div>
+                <div class="summary-item">
+                  <ion-icon name="calendar-outline" class="summary-icon"></ion-icon>
+                  <div>
+                    <div class="summary-label">Next shift</div>
+                    <div class="summary-value">Coming soon</div>
+                  </div>
+                </div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" sizeLg="4">
+          <ion-card class="quick-card">
+            <ion-card-content>
+              <div class="quick-title">Quick actions</div>
+              <p class="quick-subtitle">
+                Use these shortcuts to manage your session.
+              </p>
+              <ion-button
+                expand="block"
+                fill="solid"
+                color="primary"
+                (click)="logout()"
+              >
+                Sign out
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12" sizeLg="6">
+          <ion-card class="home-card">
+            <ion-card-header>
+              <ion-card-title>Employee information</ion-card-title>
+              <ion-card-subtitle>
+                {{ employee?.position || 'Position not updated' }}
+              </ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-grid class="info-grid">
+                <ion-row>
+                  <ion-col size="12" sizeMd="6">
+                    <div class="info-item">
+                      <span class="info-label">Full name</span>
+                      <span class="info-value">
+                        {{ user?.name || 'Not updated' }}
+                      </span>
+                    </div>
+                  </ion-col>
+                  <ion-col size="12" sizeMd="6">
+                    <div class="info-item">
+                      <span class="info-label">Email</span>
+                      <span class="info-value">
+                        {{ user?.email || 'Not updated' }}
+                      </span>
+                    </div>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row>
+                  <ion-col size="12" sizeMd="6">
+                    <div class="info-item">
+                      <span class="info-label">Department</span>
+                      <span class="info-value">
+                        {{ employee?.department?.name || 'Not updated' }}
+                      </span>
+                    </div>
+                  </ion-col>
+                  <ion-col size="12" sizeMd="6">
+                    <div class="info-item">
+                      <span class="info-label">Phone number</span>
+                      <span class="info-value">
+                        {{ employee?.phone || 'Not updated' }}
+                      </span>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" sizeLg="6">
+          <ion-card class="home-card">
+            <ion-card-header>
+              <ion-card-title>Attendance and shifts</ion-card-title>
+              <ion-card-subtitle>
+                Quickly view your work status.
+              </ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <p>
+                Attendance, schedule and history features will be added in the
+                next tabs.
+              </p>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 </ion-content>

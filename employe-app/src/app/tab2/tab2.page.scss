@@ -1,0 +1,20 @@
+.tab-content {
+  --padding-top: 24px;
+  --background: radial-gradient(circle at top, #0f172a, #020617);
+}
+
+.tab-wrapper {
+  padding: 24px 16px;
+}
+
+.tab-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #e5e7eb;
+}
+
+.tab-subtitle {
+  font-size: 14px;
+  color: rgba(148, 163, 184, 0.95);
+}
