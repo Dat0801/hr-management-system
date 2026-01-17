@@ -11,11 +11,6 @@
   flex-direction: column;
   overflow: hidden;
   margin-left: 250px;
-  transition: margin-left 0.3s ease;
-}
-
-.main-content.collapsed {
-  margin-left: 80px;
 }
 
 .page-content {
