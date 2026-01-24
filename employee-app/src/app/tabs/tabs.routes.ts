@@ -12,6 +12,11 @@ export const routes: Routes = [
           import('../tab1/tab1.page').then((m) => m.Tab1Page),
       },
       {
+        path: 'schedule',
+        loadComponent: () =>
+          import('../schedule/schedule.page').then((m) => m.SchedulePage),
+      },
+      {
         path: 'tab2',
         loadComponent: () =>
           import('../tab2/tab2.page').then((m) => m.Tab2Page),

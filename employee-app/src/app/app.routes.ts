@@ -13,4 +13,10 @@ export const routes: Routes = [
       import('./tabs/tabs.routes').then((m) => m.routes),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'leave-request',
+    loadComponent: () =>
+      import('./leave-request/leave-request.page').then((m) => m.LeaveRequestPage),
+    canActivate: [AuthGuard],
+  },
 ];

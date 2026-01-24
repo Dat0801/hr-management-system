@@ -1,0 +1,80 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" color="dark" icon="chevron-back"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Request Leave</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  
+  <!-- Balance Card -->
+  <div class="balance-card">
+    <div class="balance-header">
+      <span>Annual Leave Balance</span>
+      <ion-icon name="information-circle"></ion-icon>
+    </div>
+    <div class="balance-amount">15 Days Available</div>
+    <div class="balance-info">Earned up to Oct 2023</div>
+  </div>
+
+  <!-- Leave Type -->
+  <div class="input-group">
+    <label>Leave Type</label>
+    <div class="custom-select">
+      <ion-select [(ngModel)]="leaveType" interface="popover" mode="ios" toggleIcon="chevron-down">
+        <ion-select-option value="annual">Annual Leave</ion-select-option>
+        <ion-select-option value="sick">Sick Leave</ion-select-option>
+        <ion-select-option value="unpaid">Unpaid Leave</ion-select-option>
+      </ion-select>
+    </div>
+  </div>
+
+  <!-- Select Dates -->
+  <div class="input-group">
+    <label>Select Dates</label>
+    <div class="calendar-container">
+      <ion-datetime 
+        presentation="date" 
+        [multiple]="true"
+        color="primary"
+        class="custom-datetime"
+        size="cover"
+      ></ion-datetime>
+    </div>
+  </div>
+
+  <!-- Reason -->
+  <div class="input-group">
+    <label>Reason for Leave</label>
+    <div class="custom-textarea">
+      <ion-textarea 
+        placeholder="Please provide a brief reason for your request..."
+        [(ngModel)]="reason"
+        [rows]="3"
+        autoGrow="true"
+      ></ion-textarea>
+    </div>
+  </div>
+
+  <!-- Submit Section -->
+  <div class="submit-section">
+    <ion-button expand="block" class="submit-btn" (click)="submitRequest()">
+      Submit Request
+    </ion-button>
+    
+    <div class="request-summary">
+      <span class="attachments-label">Attachments</span>
+      <span class="total-days">Total requested: 5 days</span>
+    </div>
+
+    <!-- Upload -->
+    <div class="upload-box">
+      <ion-icon name="cloud-upload"></ion-icon>
+      <div class="upload-text">Upload Medical Certificate</div>
+      <div class="upload-subtext">PDF, JPG or PNG up to 10MB</div>
+    </div>
+  </div>
+
+</ion-content>

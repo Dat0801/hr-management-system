@@ -4,19 +4,16 @@ import {
   IonCard,
   IonCardContent,
   IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonInput,
-  IonItem,
-  IonLabel,
   IonButton,
   IonSpinner,
   IonText,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { addIcons } from 'ionicons';
+import { business, eye, eyeOff, headset, fingerPrint } from 'ionicons/icons';
 
 @Component({
   selector: 'app-login',
@@ -27,33 +24,32 @@ import { AuthService } from '../services/auth.service';
     CommonModule,
     ReactiveFormsModule,
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonCard,
-    IonCardContent,
-    IonInput,
-    IonItem,
-    IonLabel,
     IonButton,
     IonSpinner,
     IonText,
+    IonIcon,
   ],
 })
 export class LoginPage implements OnInit {
   form: FormGroup;
   loading = false;
   error = '';
+  showPassword = false;
 
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   constructor() {
+    addIcons({ business, eye, eyeOff, headset, fingerPrint });
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
   ngOnInit(): void {

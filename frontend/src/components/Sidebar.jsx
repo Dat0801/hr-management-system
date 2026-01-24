@@ -1,27 +1,38 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-  Home,
-  Users,
-  Building2,
+  LayoutDashboard,
+  Briefcase,
   Clock,
-  FileText,
+  Calendar,
+  Banknote,
+  Settings,
   LogOut,
   Menu,
   X,
+  Building2,
 } from 'lucide-react';
+import { useAuth } from '../store/auth';
 import '../styles/sidebar.css';
 
-const Sidebar = ({ onLogout }) => {
+const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
 
   const menuItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: Home },
-    { path: '/employees', label: 'Employees', icon: Users },
+    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { path: '/employees', label: 'Employee Directory', icon: Briefcase },
     { path: '/departments', label: 'Departments', icon: Building2 },
     { path: '/attendance', label: 'Attendance', icon: Clock },
-    { path: '/leave-requests', label: 'Leave Requests', icon: FileText },
+    { path: '/leave-requests', label: 'Leave Management', icon: Calendar },
+    { path: '/payroll', label: 'Payroll', icon: Banknote },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -46,9 +57,15 @@ const Sidebar = ({ onLogout }) => {
 
       {/* Sidebar */}
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-        {/* Logo */}
-        <div className="sidebar-header">
-          <h1 className="sidebar-logo">HR System</h1>
+        {/* User Profile Section */}
+        <div className="sidebar-profile">
+          <div className="profile-avatar">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Profile" />
+          </div>
+          <div className="profile-info">
+            <h3 className="profile-name">Alex Rivera</h3>
+            <p className="profile-role">Global Admin</p>
+          </div>
         </div>
 
         {/* Navigation Menu */}
@@ -72,17 +89,26 @@ const Sidebar = ({ onLogout }) => {
           </ul>
         </nav>
 
-        {/* Logout Button */}
-        <div className="sidebar-footer">
-          <button
-            className="logout-btn"
-            onClick={() => {
-              setIsOpen(false);
-              onLogout();
+        {/* Bottom Section */}
+        <div className="sidebar-bottom">
+          <Link to="/settings" className="menu-item settings-link">
+            <Settings size={20} className="menu-icon" />
+            <span className="menu-label">Settings</span>
+          </Link>
+          
+          <button 
+            className="menu-item logout-btn" 
+            onClick={handleLogout}
+            style={{ 
+              width: '100%', 
+              border: 'none', 
+              background: 'transparent', 
+              cursor: 'pointer',
+              color: '#ef4444' 
             }}
           >
-            <LogOut size={20} />
-            <span>Logout</span>
+            <LogOut size={20} className="menu-icon" />
+            <span className="menu-label">Log Out</span>
           </button>
         </div>
       </aside>

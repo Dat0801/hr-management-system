@@ -1,0 +1,120 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="header-toolbar">
+    <div class="header-content">
+      <div class="user-info">
+        <ion-avatar class="user-avatar">
+          <img src="https://i.pravatar.cc/150?u=sarah" alt="User Avatar" />
+        </ion-avatar>
+        <div class="user-text">
+          <div class="date-text">{{ currentDate | date:'EEEE, MMM d' }}</div>
+          <div class="welcome-text">Welcome, {{ user?.name || 'Sarah' }}</div>
+        </div>
+      </div>
+      <ion-button fill="clear" class="notification-btn">
+        <ion-icon name="notifications" slot="icon-only"></ion-icon>
+        <ion-badge color="danger" class="notification-badge"></ion-badge>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding dashboard-content">
+  
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <div class="action-btn clock-in">
+      <div class="action-content">
+        <ion-icon name="time"></ion-icon>
+        <span>Clock In</span>
+      </div>
+    </div>
+    <div class="action-btn request-leave" (click)="goToLeaveRequest()">
+      <div class="action-content">
+        <ion-icon name="calendar"></ion-icon>
+        <span>Request Leave</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Section -->
+  <div class="section-header">
+    <h3>Your Summary</h3>
+    <span class="view-all">View All</span>
+  </div>
+
+  <div class="summary-cards">
+    <!-- Leave Balance -->
+    <ion-card class="leave-card">
+      <ion-card-content>
+        <div class="leave-row">
+          <div class="leave-info">
+            <div class="leave-amount">14.5 Days</div>
+            <div class="leave-label">LEAVE BALANCE</div>
+            <ion-button fill="solid" size="small" class="view-policy-btn">View Leave Policy</ion-button>
+          </div>
+          <div class="leave-graphic">
+            <!-- Placeholder for graphic -->
+            <div class="mountain-placeholder"></div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="stats-row">
+      <!-- Attendance -->
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-header">
+            <span class="stat-label">ATTENDANCE</span>
+            <div class="stat-icon-bg green">
+              <ion-icon name="trending-up"></ion-icon>
+            </div>
+          </div>
+          <div class="stat-value">85%</div>
+          <div class="stat-change positive">+5% from last month</div>
+          <ion-progress-bar value="0.85" color="success" class="stat-progress"></ion-progress-bar>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Hours -->
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-header">
+            <span class="stat-label">HOURS</span>
+             <div class="stat-icon-bg blue">
+              <ion-icon name="timer"></ion-icon>
+            </div>
+          </div>
+          <div class="stat-value">168.0</div>
+          <div class="stat-change">Current Pay Period</div>
+          <ion-progress-bar value="0.75" color="primary" class="stat-progress"></ion-progress-bar>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Recent Notifications -->
+  <div class="section-header">
+    <h3>Recent Notifications</h3>
+  </div>
+
+  <div class="notifications-list">
+    <ion-card *ngFor="let note of notifications" class="notification-card">
+      <ion-card-content class="notification-content">
+        <div class="notification-icon" [ngClass]="note.bg">
+           <ion-icon [name]="note.icon" [color]="note.color"></ion-icon>
+        </div>
+        <div class="notification-text">
+          <div class="notification-header">
+            <span class="note-title">{{ note.title }}</span>
+            <span class="note-time">{{ note.time }}</span>
+          </div>
+          <p class="note-desc">{{ note.description }}</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  
+  <div class="spacer" style="height: 20px"></div>
+
+</ion-content>
