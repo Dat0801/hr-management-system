@@ -11,7 +11,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = 'Login | HR Management';
+    document.title = 'Login | HRFlow Pro';
   }, []);
 
   useEffect(() => {
@@ -25,183 +25,152 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500">
+    <div className="min-h-screen flex w-full">
       {/* Left Section - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-600 to-secondary-600 opacity-95" />
-        <div className="relative z-10 flex flex-col justify-center px-16 xl:px-24 text-white">
-          <div className="mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm mb-6">
-              <Building2 size={32} strokeWidth={2} />
-            </div>
-            <h1 className="text-5xl xl:text-6xl font-bold mb-4 leading-tight">
-              HR Management
-              <br />
-              <span className="text-primary-100">System</span>
-            </h1>
-            <p className="text-xl text-primary-50 max-w-md leading-relaxed">
-              Streamline your workforce management with our comprehensive HR solution.
-            </p>
+      <div className="hidden lg:flex lg:w-1/2 bg-blue-600 relative flex-col justify-between p-12 text-white overflow-hidden">
+        {/* Grid Pattern Overlay */}
+        <div 
+          className="absolute inset-0 opacity-10 pointer-events-none"
+          style={{
+            backgroundImage: `linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)`,
+            backgroundSize: '40px 40px'
+          }}
+        />
+
+        {/* Logo */}
+        <div className="relative z-10 flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+            <Building2 size={24} className="text-white" />
           </div>
-          
-          <div className="mt-12 space-y-6">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg mb-1">Employee Management</h3>
-                <p className="text-primary-100 text-sm">Centralized database for all employee information</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg mb-1">Attendance Tracking</h3>
-                <p className="text-primary-100 text-sm">Real-time monitoring and automated reporting</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg mb-1">Leave Management</h3>
-                <p className="text-primary-100 text-sm">Simplified leave requests and approval workflows</p>
-              </div>
-            </div>
-          </div>
+          <span className="text-xl font-bold tracking-tight">HRFlow Pro</span>
         </div>
-        
-        {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary-500/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+
+        {/* Main Content */}
+        <div className="relative z-10 max-w-lg">
+          <h1 className="text-5xl font-bold mb-6 leading-tight">
+            Manage your<br />workforce efficiently
+          </h1>
+          <p className="text-blue-100 text-lg leading-relaxed opacity-90">
+            A comprehensive HR Management System designed to streamline attendance, leave management, and employee performance in one centralized platform.
+          </p>
+        </div>
+
+        {/* Footer/Version */}
+        <div className="relative z-10 flex items-center gap-2 text-sm font-medium text-blue-200">
+          <div className="w-2 h-2 rounded-full bg-green-400"></div>
+          <span>VERSION 2.0.4 STABLE</span>
+        </div>
       </div>
 
       {/* Right Section - Login Form */}
-      <div className="flex-1 flex items-center justify-center px-6 lg:px-12 py-12">
-        <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-2xl p-10 lg:p-12">
-            {/* Mobile Logo */}
-            <div className="lg:hidden flex justify-center mb-8">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 text-white">
-                <Building2 size={24} strokeWidth={2} />
-              </div>
+      <div className="flex-1 flex flex-col justify-center px-8 lg:px-24 bg-white relative">
+        <div className="w-full max-w-md mx-auto">
+          {/* Mobile Logo */}
+          <div className="lg:hidden flex items-center gap-2 mb-10">
+            <div className="p-2 bg-blue-600 rounded-lg">
+              <Building2 size={24} className="text-white" />
             </div>
-
-            {/* Header */}
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back</h2>
-              <p className="text-gray-600">Sign in to access your dashboard</p>
-            </div>
-
-            {/* Error Message */}
-            {error && (
-              <div className="mb-6 flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-800 animate-in fade-in slide-in-from-top-2 duration-300">
-                <AlertCircle size={20} className="flex-shrink-0" />
-                <span className="text-sm font-medium">{error}</span>
-              </div>
-            )}
-
-            {/* Form */}
-            <form onSubmit={onSubmit} className="space-y-5">
-              {/* Email Field */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                    <Mail size={20} />
-                  </div>
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all disabled:bg-gray-100 disabled:text-gray-500"
-                    disabled={isLoading}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Password Field */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                    <Lock size={20} />
-                  </div>
-                  <input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full pl-11 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all disabled:bg-gray-100 disabled:text-gray-500"
-                    disabled={isLoading}
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    disabled={isLoading}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-3.5 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
-              >
-                {isLoading ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Signing in...
-                  </>
-                ) : (
-                  'Sign In'
-                )}
-              </button>
-            </form>
-
-            {/* Footer */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <div className="bg-blue-50 rounded-lg px-4 py-3">
-                <p className="text-xs text-gray-600 text-center">
-                  <span className="font-semibold text-gray-700">Demo Credentials:</span>
-                  <br />
-                  admin@example.com / password
-                </p>
-              </div>
-            </div>
+            <span className="text-xl font-bold text-gray-900">HRFlow Pro</span>
           </div>
 
-          {/* Additional Info */}
-          <p className="text-center text-sm text-white/80 mt-6">
-            © 2026 HR Management System. All rights reserved.
-          </p>
+          <div className="mb-10">
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Admin Login</h2>
+            <p className="text-gray-500">Enter your credentials to access the dashboard</p>
+          </div>
+
+          {error && (
+            <div className="mb-6 flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-800 text-sm">
+              <AlertCircle size={18} className="flex-shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          <form onSubmit={onSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                  <Mail size={20} />
+                </div>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="e.g., admin@example.com"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-gray-400 text-gray-900"
+                  disabled={isLoading}
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                  <Lock size={20} />
+                </div>
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-gray-400 text-gray-900"
+                  disabled={isLoading}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                <span className="text-sm text-gray-600">Remember me</span>
+              </label>
+              <a href="#" className="text-sm font-semibold text-blue-600 hover:text-blue-700">
+                Forgot password?
+              </a>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-200 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Logging in...
+                </>
+              ) : (
+                'Login to Dashboard'
+              )}
+            </button>
+          </form>
+
+          <div className="mt-12 flex items-center justify-between text-xs text-gray-500">
+            <p>© 2024 HRFlow Pro Inc. All rights reserved.</p>
+            <div className="flex gap-4">
+              <a href="#" className="hover:text-gray-900">Support</a>
+              <a href="#" className="hover:text-gray-900">Privacy</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

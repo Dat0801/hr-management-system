@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Plus, Eye, Edit, Trash2, Search, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Eye, Edit, Trash2, Search, Filter, ChevronLeft, ChevronRight, MoreHorizontal, Briefcase, Calendar, Umbrella } from 'lucide-react';
 import api from '../../lib/api';
 import EmployeeForm from './EmployeeForm';
 import { useAuth } from '../../store/auth';
@@ -117,15 +117,15 @@ export default function EmployeeList() {
   const getStatusBadgeColor = (status) => {
     switch (status) {
       case 'active':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-700';
       case 'inactive':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-700';
       case 'on_leave':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-orange-100 text-orange-700';
       case 'terminated':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-700';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-700';
     }
   };
 
@@ -143,42 +143,47 @@ export default function EmployeeList() {
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Employees</h1>
-          <p className="text-gray-600 mt-1">Manage your organization's workforce</p>
+          <h1 className="text-2xl font-bold text-gray-900">Employee Directory</h1>
+          <p className="text-gray-500 mt-1">Manage your team members and their account status.</p>
         </div>
-        {(user?.role === 'admin' || user?.role === 'hr') && (
-          <button
-            onClick={handleCreateClick}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Plus size={20} />
-            Create Employee
-          </button>
-        )}
+        <div className="flex items-center gap-4">
+          <div className="bg-blue-50 text-blue-600 px-4 py-2 rounded-lg font-medium text-sm">
+            Total: {employeesData?.length || 0} Employees
+          </div>
+          {(user?.role === 'admin' || user?.role === 'hr') && (
+            <button
+              onClick={handleCreateClick}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Plus size={18} />
+              Add New Employee
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Filters */}
-      <div className="mb-6 bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-3 text-gray-400" size={18} />
-            <input
-              type="text"
-              placeholder="Search by name or code..."
-              value={searchQuery}
-              onChange={(e) => handleFilterChange(setSearchQuery)(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+      <div className="mb-6 bg-white rounded-lg p-2 shadow-sm border border-gray-200 flex flex-wrap items-center gap-4">
+        {/* Search */}
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <input
+            type="text"
+            placeholder="Search by name, ID, or role..."
+            value={searchQuery}
+            onChange={(e) => handleFilterChange(setSearchQuery)(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-none rounded-lg focus:outline-none focus:ring-0 text-sm"
+          />
+        </div>
 
+        <div className="flex items-center gap-3">
           {/* Department Filter */}
-          <div className="relative">
-            <Filter className="absolute left-3 top-3 text-gray-400" size={18} />
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-gray-500 uppercase">Department</span>
             <select
               value={departmentFilter}
               onChange={(e) => handleFilterChange(setDepartmentFilter)(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
+              className="pl-3 pr-8 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
             >
               <option value="">All Departments</option>
               {Array.isArray(departmentsData) &&
@@ -191,20 +196,24 @@ export default function EmployeeList() {
           </div>
 
           {/* Status Filter */}
-          <div className="relative">
-            <Filter className="absolute left-3 top-3 text-gray-400" size={18} />
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-gray-500 uppercase">Status</span>
             <select
               value={statusFilter}
               onChange={(e) => handleFilterChange(setStatusFilter)(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
+              className="pl-3 pr-8 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
             >
-              <option value="">All Statuses</option>
+              <option value="">All Status</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
               <option value="on_leave">On Leave</option>
               <option value="terminated">Terminated</option>
             </select>
           </div>
+          
+           <button className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
+             <Filter size={18} />
+           </button>
         </div>
       </div>
 
@@ -228,80 +237,91 @@ export default function EmployeeList() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50">
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      Name
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      Employee Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      Employee ID
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
                       Department
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      Position
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      Role
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      Hire Date
-                    </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-200">
                   {paginatedEmployees.map((employee) => (
                     <tr
                       key={employee.id}
-                      className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
+                      className="hover:bg-gray-50 transition-colors"
                     >
-                      <td className="px-6 py-4 text-sm text-gray-700">
-                        {employee.user?.name || '-'}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-sm">
+                            {employee.user?.name?.charAt(0) || 'U'}
+                          </div>
+                          <div>
+                            <div className="font-medium text-gray-900">{employee.user?.name || '-'}</div>
+                            <div className="text-sm text-gray-500">{employee.user?.email || 'email@company.com'}</div>
+                          </div>
+                        </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-700">
+                      <td className="px-6 py-4 text-sm text-gray-600 font-medium">
+                        EMP-{employee.id.toString().padStart(4, '0')}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-600">
                         {employee.department?.name || '-'}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-700">
+                      <td className="px-6 py-4 text-sm text-gray-600">
                         {employee.position || '-'}
                       </td>
-                      <td className="px-6 py-4 text-sm">
+                      <td className="px-6 py-4">
                         <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeColor(
+                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(
                             employee.status
                           )}`}
                         >
                           {employee.status === 'on_leave' ? 'On Leave' : employee.status?.charAt(0).toUpperCase() + employee.status?.slice(1)}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-700">
-                        {formatDate(employee.hire_date)}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <div className="flex items-center justify-center gap-2">
-                          <button
-                            onClick={() => handleViewClick(employee)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                            title="View"
-                          >
-                            <Eye size={16} />
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex justify-end relative group">
+                          <button className="text-gray-400 hover:text-gray-600">
+                            <MoreHorizontal size={20} />
                           </button>
-                          {(user?.role === 'admin' || user?.role === 'hr') && (
-                            <button
-                              onClick={() => handleEditClick(employee)}
-                              className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                              title="Edit"
-                            >
-                              <Edit size={16} />
-                            </button>
-                          )}
-                          {user?.role === 'admin' && (
-                            <button
-                              onClick={() => handleDeleteClick(employee)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                              title="Delete"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          )}
+                          
+                          <div className="hidden group-hover:flex absolute right-8 top-0 bg-white shadow-lg rounded-lg border border-gray-100 p-1 z-10 flex-col min-w-[120px]">
+                             <button
+                                onClick={() => handleViewClick(employee)}
+                                className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md flex items-center gap-2"
+                              >
+                                <Eye size={14} /> View
+                              </button>
+                              {(user?.role === 'admin' || user?.role === 'hr') && (
+                                <button
+                                  onClick={() => handleEditClick(employee)}
+                                  className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md flex items-center gap-2"
+                                >
+                                  <Edit size={14} /> Edit
+                                </button>
+                              )}
+                              {user?.role === 'admin' && (
+                                <button
+                                  onClick={() => handleDeleteClick(employee)}
+                                  className="text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md flex items-center gap-2"
+                                >
+                                  <Trash2 size={14} /> Delete
+                                </button>
+                              )}
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -311,19 +331,19 @@ export default function EmployeeList() {
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
+            {totalPages > 0 && (
               <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                <div className="text-sm text-gray-600">
-                  Showing {startIdx + 1} to {Math.min(startIdx + ITEMS_PER_PAGE, filteredEmployees.length)} of{' '}
-                  {filteredEmployees.length} employees
+                <div className="text-sm text-gray-500">
+                  Showing <span className="font-medium text-gray-900">{startIdx + 1}</span> to <span className="font-medium text-gray-900">{Math.min(startIdx + ITEMS_PER_PAGE, filteredEmployees.length)}</span> of{' '}
+                  <span className="font-medium text-gray-900">{filteredEmployees.length}</span> results
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+                    className="p-2 border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 text-gray-600"
                   >
-                    <ChevronLeft size={18} />
+                    <ChevronLeft size={16} />
                   </button>
 
                   <div className="flex items-center gap-1">
@@ -334,7 +354,7 @@ export default function EmployeeList() {
                         className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                           currentPage === page
                             ? 'bg-blue-600 text-white'
-                            : 'text-gray-700 hover:bg-gray-100'
+                            : 'text-gray-600 hover:bg-gray-50'
                         }`}
                       >
                         {page}
@@ -345,15 +365,46 @@ export default function EmployeeList() {
                   <button
                     onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+                    className="p-2 border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 text-gray-600"
                   >
-                    <ChevronRight size={18} />
+                    <ChevronRight size={16} />
                   </button>
                 </div>
               </div>
             )}
           </>
         )}
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+            <div className="p-3 bg-blue-50 rounded-lg text-blue-600">
+                <Briefcase size={24} />
+            </div>
+            <div>
+                <p className="text-sm font-medium text-gray-500">Hiring Goal</p>
+                <p className="text-2xl font-bold text-gray-900">12 / 20</p>
+            </div>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+            <div className="p-3 bg-green-50 rounded-lg text-green-600">
+                <Calendar size={24} />
+            </div>
+            <div>
+                <p className="text-sm font-medium text-gray-500">In Office Today</p>
+                <p className="text-2xl font-bold text-gray-900">94%</p>
+            </div>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+             <div className="p-3 bg-orange-50 rounded-lg text-orange-600">
+                <Umbrella size={24} />
+            </div>
+            <div>
+                <p className="text-sm font-medium text-gray-500">Upcoming Leave</p>
+                <p className="text-2xl font-bold text-gray-900">8 Requests</p>
+            </div>
+        </div>
       </div>
 
       {/* Form Modal */}
