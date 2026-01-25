@@ -201,8 +201,8 @@ const Dashboard = () => {
               <span className="text-gray-400 text-sm">avg</span>
             </div>
           </div>
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="w-full" style={{ height: '300px', minHeight: '300px', minWidth: '0' }}>
+            <ResponsiveContainer width="100%" height="100%" minHeight={300}>
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
                 <XAxis 

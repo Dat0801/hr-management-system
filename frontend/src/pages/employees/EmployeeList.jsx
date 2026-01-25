@@ -162,6 +162,37 @@ export default function EmployeeList() {
         </div>
       </div>
 
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <div className="p-3 bg-blue-50 rounded-lg text-blue-600">
+            <Briefcase size={24} />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-500">Hiring Goal</p>
+            <p className="text-2xl font-bold text-gray-900">12 / 20</p>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <div className="p-3 bg-green-50 rounded-lg text-green-600">
+            <Calendar size={24} />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-500">In Office Today</p>
+            <p className="text-2xl font-bold text-gray-900">94%</p>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <div className="p-3 bg-orange-50 rounded-lg text-orange-600">
+            <Umbrella size={24} />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-500">Upcoming Leave</p>
+            <p className="text-2xl font-bold text-gray-900">8 Requests</p>
+          </div>
+        </div>
+      </div>
+
       {/* Filters */}
       <div className="mb-6 bg-white rounded-lg p-2 shadow-sm border border-gray-200 flex flex-wrap items-center gap-4">
         {/* Search */}
@@ -374,37 +405,6 @@ export default function EmployeeList() {
             )}
           </>
         )}
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
-            <div className="p-3 bg-blue-50 rounded-lg text-blue-600">
-                <Briefcase size={24} />
-            </div>
-            <div>
-                <p className="text-sm font-medium text-gray-500">Hiring Goal</p>
-                <p className="text-2xl font-bold text-gray-900">12 / 20</p>
-            </div>
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
-            <div className="p-3 bg-green-50 rounded-lg text-green-600">
-                <Calendar size={24} />
-            </div>
-            <div>
-                <p className="text-sm font-medium text-gray-500">In Office Today</p>
-                <p className="text-2xl font-bold text-gray-900">94%</p>
-            </div>
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
-             <div className="p-3 bg-orange-50 rounded-lg text-orange-600">
-                <Umbrella size={24} />
-            </div>
-            <div>
-                <p className="text-sm font-medium text-gray-500">Upcoming Leave</p>
-                <p className="text-2xl font-bold text-gray-900">8 Requests</p>
-            </div>
-        </div>
       </div>
 
       {/* Form Modal */}

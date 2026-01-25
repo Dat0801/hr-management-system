@@ -47,19 +47,37 @@ class DatabaseSeeder extends Seeder
         
         $hrRole->givePermissionTo($hrPermissions);
 
-        $user = User::firstOrCreate(
+        // Create admin user
+        $admin = User::firstOrCreate(
             ['email' => 'admin@example.com'],
             [
-                'name' => 'Admin',
+                'name' => 'Admin User',
                 'password' => 'password',
             ]
         );
 
-        if (! $user->hasRole('admin')) {
-            $user->assignRole($adminRole);
+        if (! $admin->hasRole('admin')) {
+            $admin->assignRole($adminRole);
         }
 
-        $this->call(DepartmentSeeder::class);
-        $this->call(EmployeeSeeder::class);
+        // Create HR manager user
+        $hrManager = User::firstOrCreate(
+            ['email' => 'hr.manager@example.com'],
+            [
+                'name' => 'HR Manager',
+                'password' => 'password',
+            ]
+        );
+
+        if (! $hrManager->hasRole('hr_manager')) {
+            $hrManager->assignRole($hrRole);
+        }
+
+        $this->call([
+            DepartmentSeeder::class,
+            EmployeeSeeder::class,
+            AttendanceSeeder::class,
+            LeaveSeeder::class,
+        ]);
     }
 }

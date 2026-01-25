@@ -3,10 +3,10 @@ import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
 import '../styles/dashboard-layout.css';
 
-const DashboardLayout = ({ children, onLogout, userName }) => {
+const DashboardLayout = ({ children, userName }) => {
   return (
     <div className="dashboard-layout">
-      <Sidebar onLogout={onLogout} />
+      <Sidebar />
       <div className="main-content">
         <Topbar userName={userName} />
         <main className="page-content">
