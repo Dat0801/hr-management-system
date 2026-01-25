@@ -14,15 +14,16 @@ const queryClient = new QueryClient();
 
 // Wrapper component for dashboard pages
 function DashboardPageWrapper({ children }) {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   return (
-    <DashboardLayout onLogout={logout} userName={user?.name || 'User'}>
+    <DashboardLayout userName={user?.name || 'User'}>
       {children}
     </DashboardLayout>
   );
 }
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
   { 
     path: '/login', 
     element: <Login /> 
@@ -91,7 +92,12 @@ const router = createBrowserRouter([
     path: '*',
     element: <Navigate to="/" replace />
   }
-]);
+],
+{
+  future: {
+    v7_startTransition: true
+  }
+});
 
 export default function AppRoutes() {
   return (
