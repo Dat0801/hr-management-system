@@ -16,24 +16,28 @@
 
 <ion-content [fullscreen]="true" class="profile-content">
   
-  <div class="profile-header-section">
-    <div class="avatar-container">
-      <img [src]="profile.avatar" alt="Profile" />
-    </div>
-    <h1 class="profile-name">{{ profile.name }}</h1>
-    <p class="profile-role">{{ profile.role }}</p>
-    <p class="profile-dept">{{ profile.department }}</p>
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner></ion-spinner>
   </div>
 
-  <div class="section-title">Personal Information</div>
-  <div class="info-card">
+  <div *ngIf="!isLoading" class="profile-header-section">
+    <div class="avatar-container">
+      <img [src]="'https://i.pravatar.cc/150?u=' + (user?.email || 'user')" alt="Profile" />
+    </div>
+    <h1 class="profile-name">{{ getProfileData().name }}</h1>
+    <p class="profile-role">{{ getProfileData().position }}</p>
+    <p class="profile-dept">{{ getProfileData().department }}</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="section-title">Personal Information</div>
+  <div *ngIf="!isLoading" class="info-card">
     <div class="info-item">
       <div class="info-icon-box blue">
         <ion-icon name="mail"></ion-icon>
       </div>
       <div class="info-text">
         <label>EMAIL</label>
-        <div class="value">{{ profile.personalInfo.email }}</div>
+        <div class="value">{{ getProfileData().email }}</div>
       </div>
     </div>
     <div class="info-item">
@@ -42,7 +46,7 @@
       </div>
       <div class="info-text">
         <label>PHONE</label>
-        <div class="value">{{ profile.personalInfo.phone }}</div>
+        <div class="value">{{ getProfileData().phone }}</div>
       </div>
     </div>
     <div class="info-item">
@@ -51,29 +55,25 @@
       </div>
       <div class="info-text">
         <label>ADDRESS</label>
-        <div class="value">{{ profile.personalInfo.address }}</div>
+        <div class="value">
+          {{ getProfileData().address }}
+          <span *ngIf="getProfileData().city">, {{ getProfileData().city }}</span>
+          <span *ngIf="getProfileData().country">, {{ getProfileData().country }}</span>
+          <span *ngIf="getProfileData().postal_code"> {{ getProfileData().postal_code }}</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="section-title">Employment Details</div>
-  <div class="info-card">
+  <div *ngIf="!isLoading" class="section-title">Employment Details</div>
+  <div *ngIf="!isLoading" class="info-card">
     <div class="info-item">
       <div class="info-icon-box blue">
         <ion-icon name="business"></ion-icon>
       </div>
       <div class="info-text">
         <label>DEPARTMENT</label>
-        <div class="value">{{ profile.employment.department }}</div>
-      </div>
-    </div>
-    <div class="info-item">
-      <div class="info-icon-box blue">
-        <ion-icon name="person"></ion-icon>
-      </div>
-      <div class="info-text">
-        <label>DIRECT MANAGER</label>
-        <div class="value">{{ profile.employment.manager }}</div>
+        <div class="value">{{ getProfileData().department }}</div>
       </div>
     </div>
     <div class="info-item">
@@ -82,7 +82,7 @@
       </div>
       <div class="info-text">
         <label>EMPLOYEE ID</label>
-        <div class="value">{{ profile.employment.id }}</div>
+        <div class="value">#EMP-{{ getProfileData().employee_id }}</div>
       </div>
     </div>
   </div>
@@ -109,8 +109,16 @@
     </div>
   </div>
 
-  <div class="action-section">
-    <ion-button expand="block" class="edit-btn">Edit Profile</ion-button>
+  <div *ngIf="!isLoading" class="action-section">
+    <ion-button expand="block" class="edit-btn" (click)="openEditModal()">
+      <ion-icon name="create" slot="start"></ion-icon>
+      Edit Profile
+    </ion-button>
+    
+    <ion-button expand="block" fill="outline" class="password-btn" (click)="openPasswordModal()">
+      <ion-icon name="lock-closed" slot="start"></ion-icon>
+      Change Password
+    </ion-button>
     
     <ion-button fill="clear" color="danger" class="logout-btn" (click)="logout()">
       <ion-icon name="log-out" slot="start"></ion-icon>
@@ -119,5 +127,91 @@
   </div>
   
   <div class="spacer" style="height: 30px"></div>
+
+  <!-- Edit Profile Modal -->
+  <div *ngIf="showEditModal" class="modal-overlay" (click)="closeEditModal()">
+    <ion-card class="modal-content" (click)="$event.stopPropagation()">
+      <ion-card-content>
+        <div class="modal-header">
+          <h2>Edit Profile</h2>
+          <ion-button fill="clear" (click)="closeEditModal()">✕</ion-button>
+        </div>
+
+        <div class="form-section">
+          <ion-item>
+            <ion-label position="stacked">Phone</ion-label>
+            <ion-input [(ngModel)]="editForm.phone" type="tel" placeholder="Enter phone number"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Address</ion-label>
+            <ion-textarea [(ngModel)]="editForm.address" rows="2" placeholder="Enter address"></ion-textarea>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">City</ion-label>
+            <ion-input [(ngModel)]="editForm.city" type="text" placeholder="Enter city"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Country</ion-label>
+            <ion-input [(ngModel)]="editForm.country" type="text" placeholder="Enter country"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Postal Code</ion-label>
+            <ion-input [(ngModel)]="editForm.postal_code" type="text" placeholder="Enter postal code"></ion-input>
+          </ion-item>
+
+          <div class="modal-actions">
+            <ion-button fill="outline" expand="block" (click)="closeEditModal()">
+              Cancel
+            </ion-button>
+            <ion-button expand="block" (click)="saveProfile()">
+              Save Changes
+            </ion-button>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div *ngIf="showPasswordModal" class="modal-overlay" (click)="closePasswordModal()">
+    <ion-card class="modal-content" (click)="$event.stopPropagation()">
+      <ion-card-content>
+        <div class="modal-header">
+          <h2>Change Password</h2>
+          <ion-button fill="clear" (click)="closePasswordModal()">✕</ion-button>
+        </div>
+
+        <div class="form-section">
+          <ion-item>
+            <ion-label position="stacked">Current Password</ion-label>
+            <ion-input [(ngModel)]="passwordForm.current_password" type="password" placeholder="Enter current password"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">New Password</ion-label>
+            <ion-input [(ngModel)]="passwordForm.new_password" type="password" placeholder="Enter new password"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Confirm New Password</ion-label>
+            <ion-input [(ngModel)]="passwordForm.confirm_password" type="password" placeholder="Confirm new password"></ion-input>
+          </ion-item>
+
+          <div class="modal-actions">
+            <ion-button fill="outline" expand="block" (click)="closePasswordModal()">
+              Cancel
+            </ion-button>
+            <ion-button expand="block" (click)="changePassword()">
+              Change Password
+            </ion-button>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
 </ion-content>

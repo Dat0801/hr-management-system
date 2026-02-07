@@ -1,0 +1,185 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Performance Reviews</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Loading performance reviews...</p>
+  </div>
+
+  <div *ngIf="!isLoading && averageRating !== null" class="average-rating-card">
+    <ion-card>
+      <ion-card-content>
+        <div class="rating-header">
+          <ion-icon name="trophy" class="trophy-icon"></ion-icon>
+          <div>
+            <h3>Average Rating</h3>
+            <div class="average-value">{{ averageRating?.toFixed(1) }}/5.0</div>
+            <div class="stars-display">{{ renderStars(averageRating || 0) }}</div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div *ngIf="!isLoading && reviews.length === 0" class="empty-state">
+    <ion-icon name="star" size="large" color="medium"></ion-icon>
+    <h2>No Performance Reviews</h2>
+    <p>Your performance reviews will appear here once available.</p>
+  </div>
+
+  <div *ngIf="!isLoading && reviews.length > 0">
+    <h2 class="section-title">Review History</h2>
+    
+    <ion-card *ngFor="let review of reviews" class="review-card">
+      <ion-card-content>
+        <div class="review-header">
+          <div>
+            <h3>{{ getPeriodLabel(review.period) }} {{ review.rating_year }}</h3>
+            <p class="review-status">
+              <ion-badge [color]="getStatusColor(review.status)">
+                {{ review.status }}
+              </ion-badge>
+            </p>
+          </div>
+          <div class="review-rating">
+            <div class="rating-stars">{{ renderStars(review.overall_rating) }}</div>
+            <div class="rating-value">{{ review.overall_rating?.toFixed(1) }}/5.0</div>
+          </div>
+        </div>
+
+        <div class="review-summary" *ngIf="review.performance_summary">
+          <p>{{ review.performance_summary }}</p>
+        </div>
+
+        <div class="review-ratings" *ngIf="review.rating_leadership || review.rating_teamwork">
+          <div class="rating-item" *ngIf="review.rating_leadership">
+            <span>Leadership:</span>
+            <span class="rating-number">{{ review.rating_leadership?.toFixed(1) }}</span>
+          </div>
+          <div class="rating-item" *ngIf="review.rating_teamwork">
+            <span>Teamwork:</span>
+            <span class="rating-number">{{ review.rating_teamwork?.toFixed(1) }}</span>
+          </div>
+          <div class="rating-item" *ngIf="review.rating_communication">
+            <span>Communication:</span>
+            <span class="rating-number">{{ review.rating_communication?.toFixed(1) }}</span>
+          </div>
+          <div class="rating-item" *ngIf="review.rating_technical_skills">
+            <span>Technical Skills:</span>
+            <span class="rating-number">{{ review.rating_technical_skills?.toFixed(1) }}</span>
+          </div>
+        </div>
+
+        <ion-button 
+          fill="outline" 
+          size="small" 
+          expand="block" 
+          (click)="viewDetails(review)"
+          class="mt-3"
+        >
+          View Full Review
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Review Details Modal -->
+  <div *ngIf="selectedReview" class="modal-overlay" (click)="closeDetails()">
+    <ion-card class="modal-content" (click)="$event.stopPropagation()">
+      <ion-card-content>
+        <div class="modal-header">
+          <h2>Performance Review Details</h2>
+          <ion-button fill="clear" (click)="closeDetails()">
+            ✕
+          </ion-button>
+        </div>
+
+        <div class="details-section">
+          <h3>{{ getPeriodLabel(selectedReview.period) }} {{ selectedReview.rating_year }}</h3>
+          
+          <div class="detail-group">
+            <div class="overall-rating-display">
+              <div class="rating-stars-large">{{ renderStars(selectedReview.overall_rating) }}</div>
+              <div class="rating-value-large">{{ selectedReview.overall_rating?.toFixed(1) }}/5.0</div>
+            </div>
+          </div>
+
+          <div class="detail-group" *ngIf="selectedReview.performance_summary">
+            <h4>Performance Summary</h4>
+            <p>{{ selectedReview.performance_summary }}</p>
+          </div>
+
+          <div class="detail-group" *ngIf="selectedReview.strengths">
+            <h4>Strengths</h4>
+            <p>{{ selectedReview.strengths }}</p>
+          </div>
+
+          <div class="detail-group" *ngIf="selectedReview.areas_for_improvement">
+            <h4>Areas for Improvement</h4>
+            <p>{{ selectedReview.areas_for_improvement }}</p>
+          </div>
+
+          <div class="detail-group" *ngIf="selectedReview.rating_leadership || selectedReview.rating_teamwork">
+            <h4>Detailed Ratings</h4>
+            <div class="rating-details">
+              <div class="rating-detail-item" *ngIf="selectedReview.rating_leadership">
+                <span>Leadership:</span>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" [style.width.%]="(selectedReview.rating_leadership / 5) * 100"></div>
+                </div>
+                <span class="rating-number">{{ selectedReview.rating_leadership?.toFixed(1) }}</span>
+              </div>
+              <div class="rating-detail-item" *ngIf="selectedReview.rating_teamwork">
+                <span>Teamwork:</span>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" [style.width.%]="(selectedReview.rating_teamwork / 5) * 100"></div>
+                </div>
+                <span class="rating-number">{{ selectedReview.rating_teamwork?.toFixed(1) }}</span>
+              </div>
+              <div class="rating-detail-item" *ngIf="selectedReview.rating_communication">
+                <span>Communication:</span>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" [style.width.%]="(selectedReview.rating_communication / 5) * 100"></div>
+                </div>
+                <span class="rating-number">{{ selectedReview.rating_communication?.toFixed(1) }}</span>
+              </div>
+              <div class="rating-detail-item" *ngIf="selectedReview.rating_technical_skills">
+                <span>Technical Skills:</span>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" [style.width.%]="(selectedReview.rating_technical_skills / 5) * 100"></div>
+                </div>
+                <span class="rating-number">{{ selectedReview.rating_technical_skills?.toFixed(1) }}</span>
+              </div>
+              <div class="rating-detail-item" *ngIf="selectedReview.rating_attendance">
+                <span>Attendance:</span>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" [style.width.%]="(selectedReview.rating_attendance / 5) * 100"></div>
+                </div>
+                <span class="rating-number">{{ selectedReview.rating_attendance?.toFixed(1) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-group" *ngIf="selectedReview.feedback_from_manager">
+            <h4>Manager Feedback</h4>
+            <p>{{ selectedReview.feedback_from_manager }}</p>
+          </div>
+
+          <div class="detail-group" *ngIf="selectedReview.review_date">
+            <div class="detail-row">
+              <span>Review Date:</span>
+              <span class="detail-value">{{ selectedReview.review_date | date:'medium' }}</span>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

@@ -100,9 +100,27 @@ ion-content.dashboard-content {
       color: white;
     }
 
+    &.clock-out {
+      background-color: #10b981; /* Green */
+      color: white;
+    }
+
     &.request-leave {
       background-color: white;
       color: #1e293b;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .clock-time {
+      margin-top: 8px;
+      font-size: 12px;
+      opacity: 0.9;
+      font-weight: 500;
     }
   }
 }
@@ -336,6 +354,72 @@ ion-content.dashboard-content {
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
+      }
+    }
+  }
+
+  .quick-action-card {
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    .quick-action-content {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .quick-action-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &.wallet {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+        }
+
+        &.performance {
+          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+          color: white;
+        }
+
+        &.goals {
+          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+          color: white;
+        }
+
+        ion-icon {
+          font-size: 24px;
+        }
+      }
+
+      .quick-action-text {
+        flex: 1;
+
+        h4 {
+          margin: 0 0 4px;
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--ion-color-dark);
+        }
+
+        p {
+          margin: 0;
+          font-size: 14px;
+          color: var(--ion-color-medium);
+        }
+      }
+
+      .chevron {
+        color: var(--ion-color-medium);
+        font-size: 20px;
       }
     }
   }

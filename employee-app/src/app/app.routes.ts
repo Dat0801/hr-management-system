@@ -19,4 +19,22 @@ export const routes: Routes = [
       import('./leave-request/leave-request.page').then((m) => m.LeaveRequestPage),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'payroll',
+    loadComponent: () =>
+      import('./payroll/payroll.page').then((m) => m.PayrollPage),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'performance-reviews',
+    loadComponent: () =>
+      import('./performance-reviews/performance-reviews.page').then((m) => m.PerformanceReviewsPage),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'goals',
+    loadComponent: () =>
+      import('./goals/goals.page').then((m) => m.GoalsPage),
+    canActivate: [AuthGuard],
+  },
 ];
