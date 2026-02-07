@@ -61,7 +61,7 @@ import { ProfileService } from '../services/profile.service';
 export class Tab3Page implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly profileService = inject(ProfileService);
-  private readonly router = inject(Router);
+  readonly router = inject(Router);
   private readonly toastController = inject(ToastController);
   private readonly loadingController = inject(LoadingController);
 

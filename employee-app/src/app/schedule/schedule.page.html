@@ -7,7 +7,7 @@
     </ion-buttons>
     <ion-title>Work Schedule</ion-title>
     <ion-buttons slot="end">
-      <ion-button class="sync-btn">
+      <ion-button class="sync-btn" (click)="syncSchedule()">
         <ion-icon slot="start" name="sync-outline"></ion-icon>
         Sync
       </ion-button>
@@ -16,18 +16,31 @@
 </ion-header>
 
 <ion-content class="ion-padding" [fullscreen]="true">
-  <!-- Calendar Strip -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <!-- Calendar Section -->
   <div class="calendar-section">
     <div class="calendar-header">
-      <h2>{{ currentDate }}</h2>
+      <h2>{{ getCurrentMonthYear() }}</h2>
       <div class="arrows">
-        <ion-icon name="chevron-back"></ion-icon>
-        <ion-icon name="chevron-forward"></ion-icon>
+        <ion-button fill="clear" (click)="previousMonth()">
+          <ion-icon name="chevron-back"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="nextMonth()">
+          <ion-icon name="chevron-forward"></ion-icon>
+        </ion-button>
       </div>
     </div>
     
-    <div class="calendar-strip">
-      <div class="day-item" *ngFor="let day of days" [class.active]="day.active">
+    <div class="calendar-grid">
+      <div class="calendar-day" 
+           *ngFor="let day of days" 
+           [class.active]="day.active"
+           [class.today]="day.isToday"
+           [class.other-month]="!day.isCurrentMonth"
+           (click)="selectDay(day)">
         <span class="day-name">{{ day.day }}</span>
         <span class="day-date">{{ day.date }}</span>
       </div>
@@ -35,10 +48,17 @@
   </div>
 
   <!-- Timeline -->
-  <h3 class="section-title">Today's Schedule</h3>
+  <h3 class="section-title">
+    {{ selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) }}
+  </h3>
   
-  <div class="timeline">
-    <div class="timeline-item" *ngFor="let item of scheduleItems; let last = last" [class.break]="item.type === 'break'">
+  <div *ngIf="scheduleItems.length === 0" class="empty-schedule">
+    <ion-icon name="calendar-outline" size="large" color="medium"></ion-icon>
+    <p>No schedule items for this day</p>
+  </div>
+  
+  <div class="timeline" *ngIf="scheduleItems.length > 0">
+    <div class="timeline-item" *ngFor="let item of scheduleItems; let last = last" [class.break]="item.type === 'leave'">
       <!-- Vertical line and icon -->
       <div class="timeline-connector">
         <div class="icon-circle" [ngClass]="item.iconColor">
@@ -59,26 +79,24 @@
                <div class="meta-info">
                  <p class="time"><ion-icon name="time-outline"></ion-icon> {{ item.time }}</p>
                  <p class="location" *ngIf="item.location"><ion-icon name="location-outline"></ion-icon> {{ item.location }}</p>
-                 <p class="description" *ngIf="item.description"><ion-icon name="server-outline"></ion-icon> {{ item.description }}</p>
                </div>
-               
-               <ion-button *ngIf="item.hasButton" fill="solid" color="light" class="action-btn">
-                 <ion-icon slot="start" [name]="item.buttonIcon || 'list'"></ion-icon>
-                 {{ item.buttonText }}
-               </ion-button>
-             </div>
-             
-             <div class="card-image" *ngIf="item.image">
-                <img [src]="item.image" alt="Visual">
              </div>
           </ion-card-content>
         </ion-card>
 
-        <!-- Break Card -->
-        <div *ngIf="item.type === 'break'" class="schedule-card break-card">
-          <h4 class="item-title">{{ item.title }}</h4>
-          <p class="time">{{ item.time }} • {{ item.location }}</p>
-        </div>
+        <!-- Leave Card -->
+        <ion-card *ngIf="item.type === 'leave'" class="schedule-card leave-card">
+          <ion-card-content>
+            <div class="text-content">
+              <ion-badge [color]="item.iconColor">{{ item.status }}</ion-badge>
+              <h4 class="item-title">{{ item.title }}</h4>
+              <div class="meta-info">
+                <p class="time"><ion-icon name="time-outline"></ion-icon> {{ item.time }}</p>
+                <p class="location" *ngIf="item.location"><ion-icon name="location-outline"></ion-icon> {{ item.location }}</p>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
       </div>
     </div>
   </div>

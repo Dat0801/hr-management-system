@@ -87,23 +87,14 @@
     </div>
   </div>
 
-  <div class="section-title">Documents</div>
-  <div class="info-card">
-    <div class="info-item clickable">
+  <div *ngIf="!isLoading" class="section-title">Documents</div>
+  <div *ngIf="!isLoading" class="info-card">
+    <div class="info-item clickable" (click)="router.navigateByUrl('/documents')">
       <div class="info-icon-box blue">
         <ion-icon name="document-text"></ion-icon>
       </div>
       <div class="info-text">
-        <div class="value">Employment Contract</div>
-      </div>
-      <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
-    </div>
-    <div class="info-item clickable">
-      <div class="info-icon-box blue">
-        <ion-icon name="document-text"></ion-icon>
-      </div>
-      <div class="info-text">
-        <div class="value">Payslips</div>
+        <div class="value">View All Documents</div>
       </div>
       <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
     </div>
