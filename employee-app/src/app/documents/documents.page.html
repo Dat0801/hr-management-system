@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab3"></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Documents</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Loading documents...</p>
+  </div>
+
+  <div *ngIf="!isLoading && documents.length === 0" class="empty-state">
+    <ion-icon name="document-text" size="large" color="medium"></ion-icon>
+    <h2>No Documents</h2>
+    <p>Your documents will appear here once available.</p>
+  </div>
+
+  <div *ngIf="!isLoading && documents.length > 0">
+    <div *ngFor="let category of Object.keys(getDocumentsByCategory())" class="document-category">
+      <h2 class="category-title">{{ category }}</h2>
+      
+      <ion-card *ngFor="let doc of getDocumentsByCategory()[category]" class="document-card">
+        <ion-card-content>
+          <div class="document-content">
+            <div class="document-icon" [ngClass]="doc.color">
+              <ion-icon [name]="doc.icon"></ion-icon>
+            </div>
+            
+            <div class="document-info">
+              <h3>{{ doc.title }}</h3>
+              <p class="document-description">{{ doc.description }}</p>
+              <p class="document-date" *ngIf="doc.date">
+                <ion-icon name="calendar"></ion-icon>
+                {{ formatDate(doc.date) }}
+              </p>
+            </div>
+
+            <div class="document-actions">
+              <ion-button fill="clear" (click)="doc.action()">
+                <ion-icon name="document-text" slot="icon-only"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" (click)="downloadDocument(doc)">
+                <ion-icon name="download" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

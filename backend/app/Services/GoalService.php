@@ -2,17 +2,15 @@
 
 namespace App\Services;
 
-use App\Repositories\GoalRepository;
 use App\Models\Goal;
-use Illuminate\Pagination\Paginator;
+use App\Repositories\GoalRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class GoalService
 {
-    public function __construct(private GoalRepository $repository)
-    {
-    }
+    public function __construct(private GoalRepository $repository) {}
 
-    public function getAllGoals(array $filters = [], int $perPage = 15): Paginator
+    public function getAllGoals(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         return $this->repository->all($filters, $perPage);
     }
@@ -20,6 +18,11 @@ class GoalService
     public function getGoalById(int $id): ?Goal
     {
         return $this->repository->find($id);
+    }
+
+    public function getGoalByIdOrFail(int $id): Goal
+    {
+        return $this->repository->findOrFail($id);
     }
 
     public function createGoal(array $data): Goal
@@ -37,7 +40,7 @@ class GoalService
         return $this->repository->delete($id);
     }
 
-    public function updateProgress(int $id, int $progressPercentage, string $notes = null): Goal
+    public function updateProgress(int $id, int $progressPercentage, ?string $notes = null): Goal
     {
         $data = ['progress_percentage' => $progressPercentage];
         if ($notes) {
@@ -57,7 +60,7 @@ class GoalService
         return $this->repository->getEmployeeActiveGoals($employeeId);
     }
 
-    public function getGoalsByStatus(string $status, int $perPage = 15): Paginator
+    public function getGoalsByStatus(string $status, int $perPage = 15): LengthAwarePaginator
     {
         return $this->repository->getGoalsByStatus($status, $perPage);
     }
@@ -75,12 +78,13 @@ class GoalService
         ]);
     }
 
-    public function cancelGoal(int $id, string $reason = null): Goal
+    public function cancelGoal(int $id, ?string $reason = null): Goal
     {
         $data = ['status' => 'cancelled'];
         if ($reason) {
             $data['progress_notes'] = $reason;
         }
+
         return $this->repository->update($id, $data);
     }
 
@@ -88,13 +92,13 @@ class GoalService
     {
         $activeGoals = $this->repository->getEmployeeActiveGoals($employeeId);
         $totalGoals = count($activeGoals);
-        
+
         if ($totalGoals === 0) {
             return ['total' => 0, 'completed' => 0, 'completion_rate' => 0];
         }
 
         $completedGoals = array_filter($activeGoals, fn ($g) => $g['status'] === 'completed');
-        
+
         return [
             'total' => $totalGoals,
             'completed' => count($completedGoals),

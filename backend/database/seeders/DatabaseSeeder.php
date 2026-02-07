@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class DatabaseSeeder extends Seeder
 {
@@ -37,14 +37,14 @@ class DatabaseSeeder extends Seeder
         $employeeRole = Role::firstOrCreate(['name' => 'employee', 'guard_name' => 'web']);
 
         $adminRole->givePermissionTo(Permission::all());
-        
+
         $hrPermissions = [
             'create department', 'update department', 'view department',
             'create employee', 'update employee', 'view employee',
             'create attendance', 'update attendance', 'view attendance',
             'create leave', 'update leave', 'view leave',
         ];
-        
+
         $hrRole->givePermissionTo($hrPermissions);
 
         // Create admin user
@@ -78,6 +78,9 @@ class DatabaseSeeder extends Seeder
             EmployeeSeeder::class,
             AttendanceSeeder::class,
             LeaveSeeder::class,
+            PayrollSeeder::class,
+            PerformanceReviewSeeder::class,
+            GoalSeeder::class,
         ]);
     }
 }

@@ -22,10 +22,31 @@
   
   <!-- Action Buttons -->
   <div class="action-buttons">
-    <div class="action-btn clock-in">
+    <div 
+      class="action-btn clock-in" 
+      [class.disabled]="!canClockIn() || isClocking"
+      (click)="canClockIn() && !isClocking && clockIn()"
+    >
       <div class="action-content">
         <ion-icon name="time"></ion-icon>
-        <span>Clock In</span>
+        <span>{{ isClocking ? 'Processing...' : 'Clock In' }}</span>
+      </div>
+      <div *ngIf="todayAttendance?.check_in" class="clock-time">
+        In: {{ getClockInTime() }}
+      </div>
+    </div>
+    <div 
+      class="action-btn clock-out" 
+      [class.disabled]="!canClockOut() || isClocking"
+      (click)="canClockOut() && !isClocking && clockOut()"
+      *ngIf="todayAttendance?.check_in"
+    >
+      <div class="action-content">
+        <ion-icon name="time"></ion-icon>
+        <span>{{ isClocking ? 'Processing...' : 'Clock Out' }}</span>
+      </div>
+      <div *ngIf="todayAttendance?.check_out" class="clock-time">
+        Out: {{ getClockOutTime() }}
       </div>
     </div>
     <div class="action-btn request-leave" (click)="goToLeaveRequest()">
@@ -91,6 +112,56 @@
         </ion-card-content>
       </ion-card>
     </div>
+
+    <!-- Quick Actions -->
+    <div class="section-header">
+      <h3>Quick Actions</h3>
+    </div>
+
+    <ion-card class="quick-action-card" (click)="router.navigateByUrl('/payroll')">
+      <ion-card-content>
+        <div class="quick-action-content">
+          <div class="quick-action-icon wallet">
+            <ion-icon name="wallet"></ion-icon>
+          </div>
+          <div class="quick-action-text">
+            <h4>View Payroll</h4>
+            <p>Check your salary and payslips</p>
+          </div>
+          <ion-icon name="chevron-forward" class="chevron"></ion-icon>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="quick-action-card" (click)="router.navigateByUrl('/performance-reviews')">
+      <ion-card-content>
+        <div class="quick-action-content">
+          <div class="quick-action-icon performance">
+            <ion-icon name="trending-up"></ion-icon>
+          </div>
+          <div class="quick-action-text">
+            <h4>Performance Reviews</h4>
+            <p>View your performance evaluations</p>
+          </div>
+          <ion-icon name="chevron-forward" class="chevron"></ion-icon>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="quick-action-card" (click)="router.navigateByUrl('/goals')">
+      <ion-card-content>
+        <div class="quick-action-content">
+          <div class="quick-action-icon goals">
+            <ion-icon name="target"></ion-icon>
+          </div>
+          <div class="quick-action-text">
+            <h4>My Goals</h4>
+            <p>Track and update your goals</p>
+          </div>
+          <ion-icon name="chevron-forward" class="chevron"></ion-icon>
+        </div>
+      </ion-card-content>
+    </ion-card>
   </div>
 
   <!-- Recent Notifications -->

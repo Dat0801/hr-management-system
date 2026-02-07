@@ -3,15 +3,13 @@
 namespace App\Repositories;
 
 use App\Models\Payroll;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PayrollRepository
 {
-    public function __construct(private Payroll $model)
-    {
-    }
+    public function __construct(private Payroll $model) {}
 
-    public function all(array $filters = [], int $perPage = 15): Paginator
+    public function all(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         $query = $this->model->query()->with(['employee.user', 'employee.department']);
 
@@ -58,6 +56,7 @@ class PayrollRepository
     {
         $payroll = $this->find($id);
         $payroll->update($data);
+
         return $payroll;
     }
 
@@ -84,7 +83,7 @@ class PayrollRepository
             ->toArray();
     }
 
-    public function getPayrollsByStatus(string $status, int $perPage = 15): Paginator
+    public function getPayrollsByStatus(string $status, int $perPage = 15): LengthAwarePaginator
     {
         return $this->model->where('status', $status)
             ->with(['employee.user', 'employee.department'])

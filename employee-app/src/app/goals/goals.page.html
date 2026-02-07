@@ -1,0 +1,159 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Goals</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Loading goals...</p>
+  </div>
+
+  <div *ngIf="!isLoading && completionStats" class="completion-stats-card">
+    <ion-card>
+      <ion-card-content>
+        <h3>Goal Completion</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value">{{ completionStats.completed || 0 }}</div>
+            <div class="stat-label">Completed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ completionStats.in_progress || 0 }}</div>
+            <div class="stat-label">In Progress</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ completionStats.total || 0 }}</div>
+            <div class="stat-label">Total Goals</div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div *ngIf="!isLoading && goals.length === 0" class="empty-state">
+    <ion-icon name="target" size="large" color="medium"></ion-icon>
+    <h2>No Goals</h2>
+    <p>Your goals will appear here once assigned.</p>
+  </div>
+
+  <div *ngIf="!isLoading && goals.length > 0">
+    <h2 class="section-title">My Goals</h2>
+    
+    <ion-card *ngFor="let goal of goals" class="goal-card">
+      <ion-card-content>
+        <div class="goal-header">
+          <div class="goal-title-section">
+            <h3>{{ goal.title }}</h3>
+            <div class="goal-meta">
+              <ion-badge [color]="getStatusColor(goal.status)">
+                {{ goal.status?.replace('_', ' ') }}
+              </ion-badge>
+              <span class="goal-category">{{ getCategoryLabel(goal.category) }}</span>
+            </div>
+          </div>
+          <div *ngIf="isOverdue(goal.due_date)" class="overdue-badge">
+            <ion-icon name="alert-circle" color="danger"></ion-icon>
+            <span>Overdue</span>
+          </div>
+        </div>
+
+        <p class="goal-description">{{ goal.description }}</p>
+
+        <div class="goal-progress">
+          <div class="progress-header">
+            <span>Progress</span>
+            <span class="progress-percentage">{{ goal.progress_percentage || 0 }}%</span>
+          </div>
+          <ion-progress-bar 
+            [value]="(goal.progress_percentage || 0) / 100" 
+            [color]="getProgressColor(goal.progress_percentage || 0)"
+          ></ion-progress-bar>
+        </div>
+
+        <div class="goal-dates">
+          <div class="date-item">
+            <span class="date-label">Start:</span>
+            <span class="date-value">{{ formatDate(goal.start_date) }}</span>
+          </div>
+          <div class="date-item" [class.overdue]="isOverdue(goal.due_date)">
+            <span class="date-label">Due:</span>
+            <span class="date-value">{{ formatDate(goal.due_date) }}</span>
+          </div>
+        </div>
+
+        <ion-button 
+          fill="outline" 
+          size="small" 
+          expand="block" 
+          (click)="openProgressModal(goal)"
+          [disabled]="goal.status === 'completed' || goal.status === 'cancelled'"
+          class="mt-3"
+        >
+          <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+          Update Progress
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Progress Update Modal -->
+  <div *ngIf="showProgressModal && selectedGoal" class="modal-overlay" (click)="closeProgressModal()">
+    <ion-card class="modal-content" (click)="$event.stopPropagation()">
+      <ion-card-content>
+        <div class="modal-header">
+          <h2>Update Progress</h2>
+          <ion-button fill="clear" (click)="closeProgressModal()">
+            ✕
+          </ion-button>
+        </div>
+
+        <div class="details-section">
+          <h3>{{ selectedGoal.title }}</h3>
+          
+          <div class="progress-input-section">
+            <label>Progress Percentage</label>
+            <div class="progress-slider-container">
+              <input 
+                type="range" 
+                min="0" 
+                max="100" 
+                [(ngModel)]="progressPercentage"
+                class="progress-slider"
+              />
+              <div class="progress-value-display">{{ progressPercentage }}%</div>
+            </div>
+            <ion-progress-bar 
+              [value]="progressPercentage / 100" 
+              [color]="getProgressColor(progressPercentage)"
+              class="progress-preview"
+            ></ion-progress-bar>
+          </div>
+
+          <div class="notes-section">
+            <label>Progress Notes</label>
+            <textarea 
+              [(ngModel)]="progressNotes"
+              rows="4"
+              placeholder="Add notes about your progress..."
+              class="notes-textarea"
+            ></textarea>
+          </div>
+
+          <div class="modal-actions">
+            <ion-button fill="outline" expand="block" (click)="closeProgressModal()">
+              Cancel
+            </ion-button>
+            <ion-button expand="block" (click)="updateProgress()">
+              Update Progress
+            </ion-button>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

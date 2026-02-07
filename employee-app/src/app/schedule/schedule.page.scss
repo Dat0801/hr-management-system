@@ -61,35 +61,31 @@ ion-toolbar {
   }
 }
 
-.calendar-strip {
-  display: flex;
-  justify-content: space-between;
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
   gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px; /* For scrollbar if needed, though usually hidden on mobile */
-  
-  // Hide scrollbar
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.day-item {
-  flex: 1;
-  min-width: 50px;
-  background: white;
-  border-radius: 16px;
-  padding: 12px 4px;
+.calendar-day {
+  aspect-ratio: 1;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  position: relative;
 
   .day-name {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     text-transform: uppercase;
     color: var(--text-secondary);
     margin-bottom: 4px;
@@ -97,19 +93,57 @@ ion-toolbar {
   }
 
   .day-date {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--text-primary);
   }
 
+  &.other-month {
+    opacity: 0.4;
+  }
+
+  &.today {
+    background: var(--primary-light);
+    border: 2px solid var(--primary-color);
+    
+    .day-date {
+      color: var(--primary-color);
+    }
+  }
+
   &.active {
     background: var(--primary-color);
-    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25);
-    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    transform: scale(1.05);
 
     .day-name, .day-date {
       color: white;
     }
+  }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.empty-schedule {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  ion-icon {
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
   }
 }
 
@@ -173,6 +207,11 @@ ion-toolbar {
       background: var(--warning-light);
       color: var(--warning-color);
     }
+
+    &.success {
+      background: #d1fae5;
+      color: #10b981;
+    }
   }
 
   .line {
@@ -221,6 +260,16 @@ ion-toolbar {
       margin: 0;
       color: var(--text-secondary);
       font-size: 0.9rem;
+    }
+  }
+
+  &.leave-card {
+    border-left: 4px solid var(--warning-color);
+    
+    .text-content {
+      .item-title {
+        color: var(--warning-color);
+      }
     }
   }
 

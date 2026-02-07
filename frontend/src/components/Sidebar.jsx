@@ -11,6 +11,13 @@ import {
   Menu,
   X,
   Building2,
+  TrendingUp,
+  Target,
+  FileText,
+  Briefcase,
+  UserCheck,
+  Calendar,
+  Handshake,
 } from 'lucide-react';
 import { useAuth } from '../store/auth';
 import '../styles/sidebar.css';
@@ -33,6 +40,13 @@ const Sidebar = () => {
     { path: '/attendance', label: 'Attendance', icon: Clock },
     { path: '/leave-requests', label: 'Leave Management', icon: Calendar },
     { path: '/payroll', label: 'Payroll', icon: Banknote },
+    { path: '/performance-reviews', label: 'Performance Reviews', icon: TrendingUp },
+    { path: '/goals', label: 'Goals', icon: Target },
+    { path: '/reports', label: 'Reports & Analytics', icon: FileText },
+    { path: '/job-positions', label: 'Job Positions', icon: Briefcase },
+    { path: '/job-applications', label: 'Job Applications', icon: UserCheck },
+    { path: '/interviews', label: 'Interviews', icon: Calendar },
+    { path: '/job-offers', label: 'Job Offers', icon: Handshake },
   ];
 
   const isActive = (path) => location.pathname === path;

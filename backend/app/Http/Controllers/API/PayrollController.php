@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Payroll;
-use App\Services\PayrollService;
 use App\Http\Requests\StorePayrollRequest;
 use App\Http\Requests\UpdatePayrollRequest;
 use App\Http\Resources\PayrollResource;
+use App\Models\Payroll;
+use App\Services\PayrollService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -16,7 +16,7 @@ class PayrollController extends Controller
     public function __construct(private PayrollService $payrollService)
     {
         $this->middleware('auth:sanctum');
-        $this->middleware('can:manage payrolls')->except(['index', 'show', 'getMyPayroll']);
+        $this->middleware('can:manage payrolls')->except(['index', 'show', 'getMyPayroll', 'getByStatus']);
     }
 
     /**
@@ -62,11 +62,11 @@ class PayrollController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id): JsonResponse
+    public function show(string $id): JsonResponse
     {
-        $payroll = $this->payrollService->getPayrollById($id);
+        $payroll = $this->payrollService->getPayrollById((int) $id);
 
-        if (!$payroll) {
+        if (! $payroll) {
             return response()->json(['message' => 'Payroll not found'], 404);
         }
 
@@ -76,15 +76,16 @@ class PayrollController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePayrollRequest $request, int $id): JsonResponse
+    public function update(UpdatePayrollRequest $request, string $id): JsonResponse
     {
-        $payroll = $this->payrollService->getPayrollById($id);
+        $payrollId = (int) $id;
+        $payroll = $this->payrollService->getPayrollById($payrollId);
 
-        if (!$payroll) {
+        if (! $payroll) {
             return response()->json(['message' => 'Payroll not found'], 404);
         }
 
-        $payroll = $this->payrollService->updatePayroll($id, $request->validated());
+        $payroll = $this->payrollService->updatePayroll($payrollId, $request->validated());
 
         return response()->json(new PayrollResource($payroll));
     }
@@ -92,11 +93,12 @@ class PayrollController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(string $id): JsonResponse
     {
-        $payroll = $this->payrollService->getPayrollById($id);
+        $payrollId = (int) $id;
+        $payroll = $this->payrollService->getPayrollById($payrollId);
 
-        if (!$payroll) {
+        if (! $payroll) {
             return response()->json(['message' => 'Payroll not found'], 404);
         }
 
@@ -107,7 +109,7 @@ class PayrollController extends Controller
             );
         }
 
-        $this->payrollService->deletePayroll($id);
+        $this->payrollService->deletePayroll($payrollId);
 
         return response()->json(['message' => 'Payroll deleted successfully']);
     }
@@ -115,11 +117,12 @@ class PayrollController extends Controller
     /**
      * Approve payroll
      */
-    public function approve(int $id): JsonResponse
+    public function approve(string $id): JsonResponse
     {
-        $payroll = $this->payrollService->getPayrollById($id);
+        $payrollId = (int) $id;
+        $payroll = $this->payrollService->getPayrollById($payrollId);
 
-        if (!$payroll) {
+        if (! $payroll) {
             return response()->json(['message' => 'Payroll not found'], 404);
         }
 
@@ -130,7 +133,7 @@ class PayrollController extends Controller
             );
         }
 
-        $payroll = $this->payrollService->approvePayroll($id);
+        $payroll = $this->payrollService->approvePayroll($payrollId);
 
         return response()->json(new PayrollResource($payroll));
     }
@@ -138,15 +141,16 @@ class PayrollController extends Controller
     /**
      * Mark payroll as paid
      */
-    public function markAsPaid(Request $request, int $id): JsonResponse
+    public function markAsPaid(Request $request, string $id): JsonResponse
     {
         $request->validate([
             'paid_date' => 'nullable|date',
         ]);
 
-        $payroll = $this->payrollService->getPayrollById($id);
+        $payrollId = (int) $id;
+        $payroll = $this->payrollService->getPayrollById($payrollId);
 
-        if (!$payroll) {
+        if (! $payroll) {
             return response()->json(['message' => 'Payroll not found'], 404);
         }
 
@@ -157,7 +161,7 @@ class PayrollController extends Controller
             );
         }
 
-        $payroll = $this->payrollService->markAsPaid($id, $request->input('paid_date'));
+        $payroll = $this->payrollService->markAsPaid($payrollId, $request->input('paid_date'));
 
         return response()->json(new PayrollResource($payroll));
     }
@@ -170,7 +174,7 @@ class PayrollController extends Controller
         $user = auth('sanctum')->user();
         $employee = $user->employee;
 
-        if (!$employee) {
+        if (! $employee) {
             return response()->json(['message' => 'Employee not found'], 404);
         }
 
@@ -188,7 +192,7 @@ class PayrollController extends Controller
     {
         $validStatuses = ['draft', 'pending', 'approved', 'paid'];
 
-        if (!in_array($status, $validStatuses)) {
+        if (! in_array($status, $validStatuses)) {
             return response()->json(['message' => 'Invalid status'], 422);
         }
 
@@ -212,4 +216,3 @@ class PayrollController extends Controller
         ]);
     }
 }
-

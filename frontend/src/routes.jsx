@@ -7,6 +7,14 @@ import Employees from './pages/Employees';
 import Departments from './pages/Departments';
 import Attendance from './pages/Attendance';
 import LeaveRequests from './pages/LeaveRequests';
+import Payroll from './pages/Payroll';
+import PerformanceReviews from './pages/PerformanceReviews';
+import Goals from './pages/Goals';
+import Reports from './pages/Reports';
+import JobPositions from './pages/JobPositions';
+import JobApplications from './pages/JobApplications';
+import Interviews from './pages/Interviews';
+import JobOffers from './pages/JobOffers';
 import ProtectedRoute from './routes/ProtectedRoute';
 import DashboardLayout from './layouts/DashboardLayout';
 
@@ -84,6 +92,86 @@ const router = createBrowserRouter(
       <ProtectedRoute>
         <DashboardPageWrapper>
           <LeaveRequests />
+        </DashboardPageWrapper>
+      </ProtectedRoute>
+    ) 
+  },
+  { 
+    path: '/payroll', 
+    element: (
+      <ProtectedRoute>
+        <DashboardPageWrapper>
+          <Payroll />
+        </DashboardPageWrapper>
+      </ProtectedRoute>
+    ) 
+  },
+  { 
+    path: '/performance-reviews', 
+    element: (
+      <ProtectedRoute>
+        <DashboardPageWrapper>
+          <PerformanceReviews />
+        </DashboardPageWrapper>
+      </ProtectedRoute>
+    ) 
+  },
+  { 
+    path: '/goals', 
+    element: (
+      <ProtectedRoute>
+        <DashboardPageWrapper>
+          <Goals />
+        </DashboardPageWrapper>
+      </ProtectedRoute>
+    ) 
+  },
+  { 
+    path: '/reports', 
+    element: (
+      <ProtectedRoute>
+        <DashboardPageWrapper>
+          <Reports />
+        </DashboardPageWrapper>
+      </ProtectedRoute>
+    ) 
+  },
+  { 
+    path: '/job-positions', 
+    element: (
+      <ProtectedRoute>
+        <DashboardPageWrapper>
+          <JobPositions />
+        </DashboardPageWrapper>
+      </ProtectedRoute>
+    ) 
+  },
+  { 
+    path: '/job-applications', 
+    element: (
+      <ProtectedRoute>
+        <DashboardPageWrapper>
+          <JobApplications />
+        </DashboardPageWrapper>
+      </ProtectedRoute>
+    ) 
+  },
+  { 
+    path: '/interviews', 
+    element: (
+      <ProtectedRoute>
+        <DashboardPageWrapper>
+          <Interviews />
+        </DashboardPageWrapper>
+      </ProtectedRoute>
+    ) 
+  },
+  { 
+    path: '/job-offers', 
+    element: (
+      <ProtectedRoute>
+        <DashboardPageWrapper>
+          <JobOffers />
         </DashboardPageWrapper>
       </ProtectedRoute>
     ) 
