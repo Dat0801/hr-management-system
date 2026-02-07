@@ -13,6 +13,8 @@ import {
   Building2,
   TrendingUp,
   Target,
+  FileText,
+  Briefcase,
 } from 'lucide-react';
 import { useAuth } from '../store/auth';
 import '../styles/sidebar.css';
@@ -37,6 +39,8 @@ const Sidebar = () => {
     { path: '/payroll', label: 'Payroll', icon: Banknote },
     { path: '/performance-reviews', label: 'Performance Reviews', icon: TrendingUp },
     { path: '/goals', label: 'Goals', icon: Target },
+    { path: '/reports', label: 'Reports & Analytics', icon: FileText },
+    { path: '/job-positions', label: 'Job Positions', icon: Briefcase },
   ];
 
   const isActive = (path) => location.pathname === path;

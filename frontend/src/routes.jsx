@@ -10,6 +10,8 @@ import LeaveRequests from './pages/LeaveRequests';
 import Payroll from './pages/Payroll';
 import PerformanceReviews from './pages/PerformanceReviews';
 import Goals from './pages/Goals';
+import Reports from './pages/Reports';
+import JobPositions from './pages/JobPositions';
 import ProtectedRoute from './routes/ProtectedRoute';
 import DashboardLayout from './layouts/DashboardLayout';
 
@@ -117,6 +119,26 @@ const router = createBrowserRouter(
       <ProtectedRoute>
         <DashboardPageWrapper>
           <Goals />
+        </DashboardPageWrapper>
+      </ProtectedRoute>
+    ) 
+  },
+  { 
+    path: '/reports', 
+    element: (
+      <ProtectedRoute>
+        <DashboardPageWrapper>
+          <Reports />
+        </DashboardPageWrapper>
+      </ProtectedRoute>
+    ) 
+  },
+  { 
+    path: '/job-positions', 
+    element: (
+      <ProtectedRoute>
+        <DashboardPageWrapper>
+          <JobPositions />
         </DashboardPageWrapper>
       </ProtectedRoute>
     ) 
