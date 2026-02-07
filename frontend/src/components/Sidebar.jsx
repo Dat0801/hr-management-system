@@ -11,6 +11,8 @@ import {
   Menu,
   X,
   Building2,
+  TrendingUp,
+  Target,
 } from 'lucide-react';
 import { useAuth } from '../store/auth';
 import '../styles/sidebar.css';
@@ -33,6 +35,8 @@ const Sidebar = () => {
     { path: '/attendance', label: 'Attendance', icon: Clock },
     { path: '/leave-requests', label: 'Leave Management', icon: Calendar },
     { path: '/payroll', label: 'Payroll', icon: Banknote },
+    { path: '/performance-reviews', label: 'Performance Reviews', icon: TrendingUp },
+    { path: '/goals', label: 'Goals', icon: Target },
   ];
 
   const isActive = (path) => location.pathname === path;

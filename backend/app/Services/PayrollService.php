@@ -2,17 +2,15 @@
 
 namespace App\Services;
 
-use App\Repositories\PayrollRepository;
 use App\Models\Payroll;
-use Illuminate\Pagination\Paginator;
+use App\Repositories\PayrollRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PayrollService
 {
-    public function __construct(private PayrollRepository $repository)
-    {
-    }
+    public function __construct(private PayrollRepository $repository) {}
 
-    public function getAllPayrolls(array $filters = [], int $perPage = 15): Paginator
+    public function getAllPayrolls(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         return $this->repository->all($filters, $perPage);
     }
@@ -25,16 +23,16 @@ class PayrollService
     public function createPayroll(array $data): Payroll
     {
         // Calculate gross salary
-        $grossSalary = $data['base_salary'] 
-            + ($data['overtime_amount'] ?? 0) 
+        $grossSalary = $data['base_salary']
+            + ($data['overtime_amount'] ?? 0)
             + ($data['bonus_amount'] ?? 0)
             + ($data['allowances'] ?? 0);
 
         $data['gross_salary'] = $grossSalary;
 
         // Calculate net salary
-        $totalDeductions = ($data['tax_amount'] ?? 0) 
-            + ($data['insurance_amount'] ?? 0) 
+        $totalDeductions = ($data['tax_amount'] ?? 0)
+            + ($data['insurance_amount'] ?? 0)
             + ($data['deductions'] ?? 0);
 
         $netSalary = $grossSalary - $totalDeductions;
@@ -46,9 +44,9 @@ class PayrollService
     public function updatePayroll(int $id, array $data): Payroll
     {
         // Recalculate gross and net salary if any component changed
-        if (isset($data['base_salary']) || isset($data['overtime_amount']) || 
+        if (isset($data['base_salary']) || isset($data['overtime_amount']) ||
             isset($data['bonus_amount']) || isset($data['allowances'])) {
-            
+
             $payroll = $this->repository->find($id);
             $base = $data['base_salary'] ?? $payroll->base_salary;
             $overtime = $data['overtime_amount'] ?? $payroll->overtime_amount;
@@ -93,16 +91,17 @@ class PayrollService
         return $this->repository->update($id, ['status' => 'approved']);
     }
 
-    public function markAsPaid(int $id, string $paidDate = null): Payroll
+    public function markAsPaid(int $id, ?string $paidDate = null): Payroll
     {
         $data = [
             'status' => 'paid',
             'paid_date' => $paidDate ?? now(),
         ];
+
         return $this->repository->update($id, $data);
     }
 
-    public function getPayrollsByStatus(string $status, int $perPage = 15): Paginator
+    public function getPayrollsByStatus(string $status, int $perPage = 15): LengthAwarePaginator
     {
         return $this->repository->getPayrollsByStatus($status, $perPage);
     }
@@ -118,10 +117,10 @@ class PayrollService
 
         // Simple tax calculation: 10% of gross salary
         $taxAmount = $employeeData['tax_amount'] ?? ($grossSalary * 0.1);
-        
+
         // Insurance: 8% of gross salary
         $insuranceAmount = $employeeData['insurance_amount'] ?? ($grossSalary * 0.08);
-        
+
         $deductions = $employeeData['deductions'] ?? 0;
         $totalDeductions = $taxAmount + $insuranceAmount + $deductions;
 

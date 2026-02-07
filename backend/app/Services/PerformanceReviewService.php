@@ -2,17 +2,15 @@
 
 namespace App\Services;
 
-use App\Repositories\PerformanceReviewRepository;
 use App\Models\PerformanceReview;
-use Illuminate\Pagination\Paginator;
+use App\Repositories\PerformanceReviewRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PerformanceReviewService
 {
-    public function __construct(private PerformanceReviewRepository $repository)
-    {
-    }
+    public function __construct(private PerformanceReviewRepository $repository) {}
 
-    public function getAllReviews(array $filters = [], int $perPage = 15): Paginator
+    public function getAllReviews(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         return $this->repository->all($filters, $perPage);
     }
@@ -34,7 +32,7 @@ class PerformanceReviewService
         ];
 
         $validRatings = array_filter($ratings, fn ($r) => $r > 0);
-        $data['overall_rating'] = !empty($validRatings) ? array_sum($validRatings) / count($validRatings) : $data['overall_rating'];
+        $data['overall_rating'] = ! empty($validRatings) ? array_sum($validRatings) / count($validRatings) : $data['overall_rating'];
 
         return $this->repository->create($data);
     }
@@ -42,10 +40,10 @@ class PerformanceReviewService
     public function updateReview(int $id, array $data): PerformanceReview
     {
         // Recalculate average rating if any rating field is updated
-        if (isset($data['rating_leadership']) || isset($data['rating_teamwork']) || 
-            isset($data['rating_communication']) || isset($data['rating_technical_skills']) || 
+        if (isset($data['rating_leadership']) || isset($data['rating_teamwork']) ||
+            isset($data['rating_communication']) || isset($data['rating_technical_skills']) ||
             isset($data['rating_attendance'])) {
-            
+
             $review = $this->repository->find($id);
             $ratings = [
                 $data['rating_leadership'] ?? $review->rating_leadership,
@@ -56,7 +54,7 @@ class PerformanceReviewService
             ];
 
             $validRatings = array_filter($ratings, fn ($r) => $r > 0);
-            $data['overall_rating'] = !empty($validRatings) ? array_sum($validRatings) / count($validRatings) : ($data['overall_rating'] ?? $review->overall_rating);
+            $data['overall_rating'] = ! empty($validRatings) ? array_sum($validRatings) / count($validRatings) : ($data['overall_rating'] ?? $review->overall_rating);
         }
 
         return $this->repository->update($id, $data);
@@ -82,7 +80,7 @@ class PerformanceReviewService
         return $this->repository->getEmployeeReviews($employeeId, $limit);
     }
 
-    public function getReviewsByYear(int $year, int $perPage = 15): Paginator
+    public function getReviewsByYear(int $year, int $perPage = 15): LengthAwarePaginator
     {
         return $this->repository->getReviewsByYear($year, $perPage);
     }
@@ -95,6 +93,7 @@ class PerformanceReviewService
         }
 
         $sum = array_sum(array_column($reviews, 'overall_rating'));
+
         return $sum / count($reviews);
     }
 }

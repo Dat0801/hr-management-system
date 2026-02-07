@@ -3,15 +3,13 @@
 namespace App\Repositories;
 
 use App\Models\Goal;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class GoalRepository
 {
-    public function __construct(private Goal $model)
-    {
-    }
+    public function __construct(private Goal $model) {}
 
-    public function all(array $filters = [], int $perPage = 15): Paginator
+    public function all(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         $query = $this->model->query()->with(['employee.user', 'createdBy']);
 
@@ -41,6 +39,11 @@ class GoalRepository
         return $this->model->with(['employee.user', 'createdBy'])->find($id);
     }
 
+    public function findOrFail(int $id): Goal
+    {
+        return $this->model->with(['employee.user', 'createdBy'])->findOrFail($id);
+    }
+
     public function create(array $data): Goal
     {
         return $this->model->create($data);
@@ -49,7 +52,13 @@ class GoalRepository
     public function update(int $id, array $data): Goal
     {
         $goal = $this->find($id);
+        
+        if (! $goal) {
+            throw new \Illuminate\Database\Eloquent\ModelNotFoundException('Goal not found');
+        }
+        
         $goal->update($data);
+
         return $goal;
     }
 
@@ -68,7 +77,7 @@ class GoalRepository
             ->toArray();
     }
 
-    public function getGoalsByStatus(string $status, int $perPage = 15): Paginator
+    public function getGoalsByStatus(string $status, int $perPage = 15): LengthAwarePaginator
     {
         return $this->model->where('status', $status)
             ->with(['employee.user', 'createdBy'])

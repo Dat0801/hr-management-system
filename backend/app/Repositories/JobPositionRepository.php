@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\JobPosition;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class JobPositionRepository
 {
@@ -26,6 +26,7 @@ class JobPositionRepository
     public function update(JobPosition $jobPosition, array $data): JobPosition
     {
         $jobPosition->update($data);
+
         return $jobPosition;
     }
 
@@ -67,7 +68,7 @@ class JobPositionRepository
             ->get();
     }
 
-    public function paginate(int $perPage = 15): Paginator
+    public function paginate(int $perPage = 15): LengthAwarePaginator
     {
         return JobPosition::with('department')
             ->paginate($perPage);

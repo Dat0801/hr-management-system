@@ -3,15 +3,13 @@
 namespace App\Repositories;
 
 use App\Models\PerformanceReview;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PerformanceReviewRepository
 {
-    public function __construct(private PerformanceReview $model)
-    {
-    }
+    public function __construct(private PerformanceReview $model) {}
 
-    public function all(array $filters = [], int $perPage = 15): Paginator
+    public function all(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         $query = $this->model->query()->with(['employee.user', 'employee.department', 'reviewer']);
 
@@ -55,6 +53,7 @@ class PerformanceReviewRepository
     {
         $review = $this->find($id);
         $review->update($data);
+
         return $review;
     }
 
@@ -82,7 +81,7 @@ class PerformanceReviewRepository
             ->toArray();
     }
 
-    public function getReviewsByYear(int $year, int $perPage = 15): Paginator
+    public function getReviewsByYear(int $year, int $perPage = 15): LengthAwarePaginator
     {
         return $this->model->where('rating_year', $year)
             ->with(['employee.user', 'employee.department', 'reviewer'])
